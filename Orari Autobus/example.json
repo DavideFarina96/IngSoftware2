@@ -1,0 +1,368 @@
+{
+   "geocoded_waypoints" : [
+      {
+         "geocoder_status" : "OK",
+         "place_id" : "ChIJ75ly6DWZeEcRjPSBAl_5Peo",
+         "types" : [ "locality", "political" ]
+      },
+      {
+         "geocoder_status" : "OK",
+         "place_id" : "ChIJ253Oycp2gkcRR_WfE5mixic",
+         "types" : [ "locality", "political" ]
+      }
+   ],
+   "routes" : [
+      {
+         "bounds" : {
+            "northeast" : {
+               "lat" : 46.0969975,
+               "lng" : 11.2977883
+            },
+            "southwest" : {
+               "lat" : 46.0024418,
+               "lng" : 11.1113418
+            }
+         },
+         "copyrights" : "Dati mappa ©2017 Google",
+         "legs" : [
+            {
+               "distance" : {
+                  "text" : "24,2 km",
+                  "value" : 24210
+               },
+               "duration" : {
+                  "text" : "25 min",
+                  "value" : 1489
+               },
+               "end_address" : "Trento TN, Italia",
+               "end_location" : {
+                  "lat" : 46.0747235,
+                  "lng" : 11.1219304
+               },
+               "start_address" : "38056 Levico Terme TN, Italia",
+               "start_location" : {
+                  "lat" : 46.0129961,
+                  "lng" : 11.2977883
+               },
+               "steps" : [
+                  {
+                     "distance" : {
+                        "text" : "0,3 km",
+                        "value" : 319
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 45
+                     },
+                     "end_location" : {
+                        "lat" : 46.0112717,
+                        "lng" : 11.2944945
+                     },
+                     "html_instructions" : "Procedi in direzione \u003cb\u003esudovest\u003c/b\u003e da \u003cb\u003eViale Lido\u003c/b\u003e verso \u003cb\u003eVicolo del Rio\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "g|ywGer}cAHPb@z@lA|CZx@JTBD~AxDXp@\\z@JTLP?@"
+                     },
+                     "start_location" : {
+                        "lat" : 46.0129961,
+                        "lng" : 11.2977883
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,4 km",
+                        "value" : 437
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 47
+                     },
+                     "end_location" : {
+                        "lat" : 46.00753779999999,
+                        "lng" : 11.2929392
+                     },
+                     "html_instructions" : "Mantieni la \u003cb\u003esinistra\u003c/b\u003e per continuare su \u003cb\u003eVia Brenta\u003c/b\u003e",
+                     "maneuver" : "keep-left",
+                     "polyline" : {
+                        "points" : "mqywGq}|cARVRPRNLHNFJHFBPH@?PHVDVFr@DVBPB`@F`@Dd@F^Dj@FNBZJLFv@\\bBl@XJB@NLLF"
+                     },
+                     "start_location" : {
+                        "lat" : 46.0112717,
+                        "lng" : 11.2944945
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,7 km",
+                        "value" : 667
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 73
+                     },
+                     "end_location" : {
+                        "lat" : 46.0029715,
+                        "lng" : 11.2876503
+                     },
+                     "html_instructions" : "Alla rotonda, prosegui dritto su \u003cb\u003eVia Claudia Augusta\u003c/b\u003e/\u003cb\u003eSP1\u003c/b\u003e",
+                     "maneuver" : "roundabout-right",
+                     "polyline" : {
+                        "points" : "czxwG{s|cA?@?@?@?@?@?@?@?@?@?@@@?@?@@@?@@@?@@??@@??@@?@?@?@??@@?@??A@?@?@?@??A@??A@?@A@A@A?A?A@??AHFNB\\^LP`ArA\\^~@~@HHZ\\dAtAv@~@HJhAvAPTfAxA^d@~@nAb@h@l@t@VZdBtC"
+                     },
+                     "start_location" : {
+                        "lat" : 46.00753779999999,
+                        "lng" : 11.2929392
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,2 km",
+                        "value" : 156
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 21
+                     },
+                     "end_location" : {
+                        "lat" : 46.0024488,
+                        "lng" : 11.2859639
+                     },
+                     "html_instructions" : "Svolta a \u003cb\u003edestra\u003c/b\u003e in \u003cb\u003eStrada Provinciale 1\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "q}wwGyr{cAB|@Dl@D^?XAP?N?J@JBH?DDLBFBDDFDBBBB@H@JFDDFHBDHR"
+                     },
+                     "start_location" : {
+                        "lat" : 46.0029715,
+                        "lng" : 11.2876503
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "19,5 km",
+                        "value" : 19483
+                     },
+                     "duration" : {
+                        "text" : "16 min",
+                        "value" : 957
+                     },
+                     "end_location" : {
+                        "lat" : 46.0966383,
+                        "lng" : 11.1168364
+                     },
+                     "html_instructions" : "Entra in \u003cb\u003eSS47\u003c/b\u003e",
+                     "maneuver" : "merge",
+                     "polyline" : {
+                        "points" : "izwwGgh{cA@RAjBEt@El@A^Ef@Gj@C^Gp@E^OfBIz@Gj@Iv@Ip@_ArHe@tDQpAWxBWrBQdAMv@UpAMv@IZMt@i@`Cq@tCc@jBKh@ABCNQv@Mr@UbAk@nCI\\G\\gArES~@s@rCm@`Cg@rBWlAWbAUfASx@Ql@IXEPMZIVKVININS`@c@p@_EpG}AbCc@n@MNIHONSREBQNQJSJIDIDs@VaBj@}A`@}@^WNqFpFa@CiAnAo@r@qAtA[^a@b@cAhAqD`EeAhA_@b@e@d@g@`@QNWNi@Ze@TSHOHMFKHIFIFIHKLMLGJILKNGNIPKVGP]~@Un@[~@iElLoBvEYn@Sf@]t@]n@Yf@_@n@W`@U\\SZm@|@}@hAo@v@qA~Ae@l@o@v@c@j@u@~@a@j@Y`@U^Yf@a@x@[j@OZQVQRKJOLMHMFUJUFOB_@@E?YAsCI_BIaDSaBM_AG[Ai@EsAGW?W@[BOBI@WFYHIBOFOFMHc@TEBe@~@MLKDo@T_@JeAJ[AqBDoB?k@Bq@Dm@Lm@XYPUP_@Vg@Z[LeBh@WFSFY?a@Ai@Qe@Mm@KSAO@c@H_@Fe@R_@Vo@`@w@d@_@Js@N{@Jm@Bg@H_@LWJa@XQNEBGFIRGLQ^IZGTI\\CRStAMv@g@xCCL]vBIf@Eh@]nBe@tCKd@GRMh@Qf@Wp@Uf@Yd@QV[`@QR[ZQNSNULm@Zg@RUFODYDc@Ds@DoADkBDg@BM?w@BwDLi@Bm@B}@Bq@BkCHSAY?qBHkCFqAHeAJe@FiARwB`@iB^iBf@y@\\m@RoBp@eC|@uAf@cEvA_A\\}@Zs@Xw@Zc@Rg@Ve@Z_Al@cAp@kBlAmCfBgBlAoEtCw@d@oA|@mEtCuDbCw@h@KHa@Xs@d@qAjAqAnAe@f@c@j@o@v@oAdBqAlBmBnCc@n@c@n@w@fA]f@[f@_@f@]f@wB`DIHeD~E{AxBmDfFQR?@SVINmBpC}ClEaClDKLMTg@`AeAdCmEbKkDfIm@vAAFo@xAQn@WfAU`Aw@jDUfAYfAi@pBSr@Yx@Wp@[x@Sb@Yf@o@dAaAxA]d@?@cAzAiCxD{CpEk@|@Q^S\\qAlEa@dAwAlEQf@EJKX[dAi@lBOv@Kx@Gv@Cb@C~@GzB?DCf@I~Be@zKI`CKlB[fFCj@Ad@@dC@x@Dr@@b@@b@Dn@FfADx@FxA?\\?l@?XAZCVANCPETCNGZGTGTY~@i@jB_@vAOf@Mh@EPG\\I^EZEb@Ej@AZA\\AT@^Bf@Bh@JdA@FHl@DZFj@B`@Dp@Bn@?LAt@?d@Ct@?pA?hA@~@BbBDr@@d@NbDHtA^fJr@bQhAtTdA~RPpEBv@n@tE|@nDxBfFzEbIvBrEdDlKHVNn@J^@FJ\\Lt@Jh@BRP`AJv@J|@LfC@~A@f@?NAb@A|@A|@]nHa@|F_AfOe@~H]dGAL?Da@lEAJ[lCYxAYrAo@pCg@xBy@hBaEfJmJ~MkKjOA@GJ}LzR_AvAKPA@iBpC_CpDeCzDSTiB`CwBpCo@p@w@p@gBlAUJWJs@Tu@Nu@L_BTe@F_ANYDaAN}@Ls@Lm@Le@RSJSJYR[XWTSTU\\SXWh@Ul@K\\A??@GTIZKb@Id@Ov@[fBQjAKl@QnAGl@CPC\\C`@Cj@"
+                     },
+                     "start_location" : {
+                        "lat" : 46.0024488,
+                        "lng" : 11.2859639
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,2 km",
+                        "value" : 200
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 12
+                     },
+                     "end_location" : {
+                        "lat" : 46.0967432,
+                        "lng" : 11.1142718
+                     },
+                     "html_instructions" : "Prendi lo svincolo \u003cb\u003eSS12\u003c/b\u003e per \u003cb\u003eBrennero\u003c/b\u003e/\u003cb\u003eBolzano\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "_gjxGggzbAG`@Ct@Ex@EhAEz@AZ?T?T@`@Bl@Bj@@d@"
+                     },
+                     "start_location" : {
+                        "lat" : 46.0966383,
+                        "lng" : 11.1168364
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,5 km",
+                        "value" : 540
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 39
+                     },
+                     "end_location" : {
+                        "lat" : 46.0946365,
+                        "lng" : 11.1135935
+                     },
+                     "html_instructions" : "Mantieni la \u003cb\u003esinistra\u003c/b\u003e, segui le indicazioni per \u003cb\u003eTrento Nord\u003c/b\u003e",
+                     "maneuver" : "keep-left",
+                     "polyline" : {
+                        "points" : "sgjxGewybA?h@?JA??J?@AFALANE\\YnBE\\Cd@AP?P@RBZBXDRHXHPLVJLNPFFLHVJPDPBX?RELENGNKPQHIBEFIJSFQFUDQF]Jq@Nw@HYJYHQHKT[NKNM@A@CHQ"
+                     },
+                     "start_location" : {
+                        "lat" : 46.0967432,
+                        "lng" : 11.1142718
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,2 km",
+                        "value" : 202
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 22
+                     },
+                     "end_location" : {
+                        "lat" : 46.092923,
+                        "lng" : 11.1144717
+                     },
+                     "html_instructions" : "Continua su \u003cb\u003eVia del Brennero\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "ozixG}rybALG@A~DkBfCy@"
+                     },
+                     "start_location" : {
+                        "lat" : 46.0946365,
+                        "lng" : 11.1135935
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,9 km",
+                        "value" : 866
+                     },
+                     "duration" : {
+                        "text" : "2 min",
+                        "value" : 92
+                     },
+                     "end_location" : {
+                        "lat" : 46.0857023,
+                        "lng" : 11.1185252
+                     },
+                     "html_instructions" : "Alla rotonda, prendi la \u003cb\u003e2ª\u003c/b\u003e uscita e rimani su \u003cb\u003eVia del Brennero\u003c/b\u003e",
+                     "maneuver" : "roundabout-right",
+                     "polyline" : {
+                        "points" : "woixGmxybAP?XEf@]LO@A?AnA}@f@[dD_BTKLI\\QHChEqBvCwAZMTKh@W\\QtEyBvAs@zBgALETAj@A"
+                     },
+                     "start_location" : {
+                        "lat" : 46.092923,
+                        "lng" : 11.1144717
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "1,0 km",
+                        "value" : 1036
+                     },
+                     "duration" : {
+                        "text" : "2 min",
+                        "value" : 121
+                     },
+                     "end_location" : {
+                        "lat" : 46.0771995,
+                        "lng" : 11.1236097
+                     },
+                     "html_instructions" : "Alla rotonda, prendi la \u003cb\u003e2ª\u003c/b\u003e uscita e rimani su \u003cb\u003eVia del Brennero\u003c/b\u003e",
+                     "maneuver" : "roundabout-right",
+                     "polyline" : {
+                        "points" : "sbhxGyqzbA@BB@BBB@B?B@B?B?B?BABABABABA@CBC@C@E@C@C@E?C@E?EN]RU^SHEnCqA|Aw@\\YPKTMZOhB{@`FaC@?fHmDbAg@pCiAjEqBx@_@TKtAs@"
+                     },
+                     "start_location" : {
+                        "lat" : 46.0857023,
+                        "lng" : 11.1185252
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "93 m",
+                        "value" : 93
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 17
+                     },
+                     "end_location" : {
+                        "lat" : 46.07644940000001,
+                        "lng" : 11.1230722
+                     },
+                     "html_instructions" : "\u003cb\u003eVia del Brennero\u003c/b\u003e svolta a \u003cb\u003edestra\u003c/b\u003e e diventa \u003cb\u003eVia Francesco Ambrosi\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "omfxGqq{bAtCjB"
+                     },
+                     "start_location" : {
+                        "lat" : 46.0771995,
+                        "lng" : 11.1236097
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "72 m",
+                        "value" : 72
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 15
+                     },
+                     "end_location" : {
+                        "lat" : 46.0758674,
+                        "lng" : 11.1226597
+                     },
+                     "html_instructions" : "Continua su \u003cb\u003ePiazza di Centa\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "yhfxGen{bArBpA"
+                     },
+                     "start_location" : {
+                        "lat" : 46.07644940000001,
+                        "lng" : 11.1230722
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,1 km",
+                        "value" : 139
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 28
+                     },
+                     "end_location" : {
+                        "lat" : 46.0747235,
+                        "lng" : 11.1219304
+                     },
+                     "html_instructions" : "Continua su \u003cb\u003eVia Giovanni Segantini\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "eefxGsk{bAdFpC"
+                     },
+                     "start_location" : {
+                        "lat" : 46.0758674,
+                        "lng" : 11.1226597
+                     },
+                     "travel_mode" : "DRIVING"
+                  }
+               ],
+               "traffic_speed_entry" : [],
+               "via_waypoint" : []
+            }
+         ],
+         "overview_polyline" : {
+            "points" : "g|ywGer}cAl@lAhBvEhCfGh@pALRf@h@`@Xt@^RHn@LjAHr@JrCZj@NdAd@|Bx@RNLF?B?D@JBHDDF@NGDGHDNB\\^nAdB|A~Ad@f@|BtClDrEpDtEVZdBtCHjBDx@A`@Df@HTHLVJPLJNHR@RG`DU`Da@xEe@pEoCtTi@xDc@hCoAjGcBnHy@~DeC~K}ChMyArGo@tBi@nAw@rA}GtKq@~@YX}@r@{An@aBj@}A`@uAn@qFpFa@CyBbCsEbF}HtIy@p@aAj@wAp@i@b@k@t@i@hAwA`EiElLoBvEm@vA{@dBy@vAoBxCqK~Mo@`A{@`Bk@fAc@j@[X[Pk@Ro@DsGU_Jk@}BMo@@mAPcA\\q@^k@bAYRoA`@eAJ[AaFD}AHm@Lm@Xo@b@gAr@aCv@k@N{@AoA_@aAMs@JeAZoAx@w@d@_@JoBZm@Bg@Hw@XaAt@Q`@[z@Qr@WhBwAvIOpAcAdGSx@_@pAm@xAk@|@m@t@m@j@i@\\uAn@e@L}@JwGTgHTiHTm@A}FPwCToBZaF`AiBf@y@\\}CdA{EdBuJjD{An@mAr@}JtG_MfIgMlIuA~@cDzCiArA_C|CgG|IqC~DaRjXiHfKmCzDu@vAmNh\\q@`Bi@vB}B|J}@dDq@jBo@|AiAlBcD|EeHjK}@|AS\\qAlEyBrG_ArCi@lBOv@SpBOdF}@dUg@tIEpAB~DFvATtEFvB?fAKtAYvAkBxGk@`COz@KnACnBT~CNhAJlAH`BAbACzA?zCDbDFxAXxFrAj\\nCth@ThGn@tE|@nDxBfFzEbIvBrEdDlKXfAf@zBl@vDJ|@LfCBfCEnD]nHa@|FeBfY_@xGc@xE[lCYxAiAdFg@xBy@hBaEfJmJ~MmKlOqOpVkFdIyCpEaFrGgBbB}BxAkA`@kB\\_Fr@_C\\aBZy@^m@^s@n@i@r@k@bAa@jASr@aAhF]xBY|BO|BKvAKbCGvA?j@J`DA`AEf@_@lCIbAAb@Dn@Hl@Rj@Xd@VXd@Tb@Hl@E\\Mn@m@R]Ng@h@yCTs@R]d@g@POJUNI~DkBfCy@P?XEt@m@@CvByAzDkB~FqCrFiCfMgGb@Gl@@NFN@NGJMFS@INc@RU^SHElFiCn@e@|J{EhHmDtEqBdGqCjB_AhG|DdFpC"
+         },
+         "summary" : "SS47",
+         "warnings" : [],
+         "waypoint_order" : []
+      }
+   ],
+   "status" : "OK"
+}

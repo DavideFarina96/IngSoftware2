@@ -25,7 +25,7 @@
   </head>
   <body onload="initMap()">
 		<div id="map"></div>
-		<script src="./1.js" type="text/javascript"> </script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script>
 		//dichiarazione mappa e finestra 
 		var map, infoWindow;
@@ -72,9 +72,7 @@
 				service = new google.maps.places.PlacesService(map);
 				//eseguo la richiesta asincrona(?)
 				service.search(request, callback);
-				
-				var g = new GeolocationMarker(map);
-				
+				getNextBuses(pos);
 				//alert("Lat,Long: " + pos.lat + "," + pos.lng);
 				}, function() {
 					handleLocationError(true, infoWindow, map.getCenter());
@@ -127,6 +125,7 @@
 			if(status == google.maps.places.PlacesServiceStatus.OK){
 				for (var i = 0; i<results.length; i++){
 					createMarker(results[i]);
+					
 				}
 			}
 		}
@@ -138,6 +137,66 @@
 								  'Error: Your browser doesn\'t support geolocation.');
 			infoWindow.open(map);
 		}
+		
+		//funzione che richiede alle api di maps indicazioni per raggiungere un posto in input
+		//e restituisce l'orario di partenza del prossimo autobus da ogni fermata nel raggio
+		function getNextBuses (stops){
+			var url = "https://maps.googleapis.com/maps/api/directions/json?origin=Povo&destination=Trento-Autostaz.&alternative=true&transit_mode=train|tram|bus&mode=transit&key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc";
+			
+			/*var xmlhttp = new XMLHttpRequest();
+			
+
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var myArr = JSON.parse(this.responseText);
+					console.log(myArr);
+				}
+			};
+			xmlhttp.open("GET", url, true);
+			xmlhttp.send();*/
+
+			$.ajaxPrefilter( function (options) {
+			  if (options.crossDomain && jQuery.support.cors) {
+				var http = (window.location.protocol === 'http:' ? 'http:' : 'https:');
+				options.url = http + '//cors-anywhere.herokuapp.com/' + options.url;
+				//options.url = "http://cors.corsproxy.io/url=" + options.url;
+			  }
+			});
+			var data;
+			$.ajax({
+				crossOrigin: true,
+				url: url,
+				success: function(data) {
+					handleDirections(data);
+				}
+			});
+			function handleDirections(data){
+				console.log(data);
+				console.log("next bus is: "+data.routes[0].legs[0].departure_time.text + " from: ");
+			}
+			/*var data;
+			$.ajax({
+				dataType: "json",
+				url: 				data: data,
+				success: success
+			});
+			function success(result){
+				console.log($.parseJSON(results));
+				console.log(result);
+			}
+			alert (data);
+			$.getJSON( "ajax/test.json", function( data ) {
+				var items = [];
+				$.each( data, function( key, val ) {
+					items.push( "<li id='" + key + "'>" + val + "</li>" );
+				});
+			 
+				$( "<ul/>", {
+				"class": "my-new-list",
+				html: items.join( "" )
+				}).appendTo( "body" );
+			});*/ 
+		}
 		</script>
 		<!-- libreria per la ricerca di luoghi speciali-->
 		
@@ -145,4 +204,4 @@
 		async defer></script>
 	</body>
 </html>
-<!-- ES completo: https://maps.googleapis.com/maps/api/directions/json?origin=LevicoTerme&destination=Trento&alternative=true&transit_mode=train|tram|bus&mode=transit&key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc -->
+<!-- ES completo: https://maps.googleapis.com/maps/api/directions/json?origin=LevicoTerme&destination=Trento&alternative=true&transit_mode=train|tram|bus&mode=transit&key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc&callback=initMap& -->
