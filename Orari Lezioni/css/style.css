@@ -1,8 +1,4 @@
-/* -------------------------------- 
-
-Primary style
-
--------------------------------- */
+/* Primary style */
 *, *::after, *::before {
   box-sizing: border-box;
 }
@@ -18,16 +14,87 @@ body {
   background-color: white;
 }
 
+/* Custom dropdown */
+.dropdown-div {
+    margin-left: 5%;
+    margin-top: 1em;
+    margin-right: 1em;    
+}
+
+.dropdown-div .title{
+	font-size: 1.2em;
+	text-align: center;
+}
+
+.dropdown-div li {
+	padding-top: .5em;
+}
+
+.big {
+  font-size: 1em;
+}
+
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: 10px;
+}
+
+.custom-dropdown select {
+  color: #fff;
+  background-color: #ccc;
+  font-size: inherit;
+  padding: .5em;
+  padding-left: .8em;
+  padding-right: 2.5em;	
+  border: 0;
+  margin: 0;
+  border-radius: 3px;
+  text-overflow: '';
+  -webkit-appearance: button; /* hide default arrow in chrome OSX */
+}
+
+.custom-dropdown::before,
+.custom-dropdown::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.custom-dropdown::after { /*  Custom dropdown arrow */
+  content: "\25BC";
+  height: 1em;
+  font-size: .625em;
+  line-height: 1;
+  right: 1.2em;
+  top: 50%;
+  margin-top: -.5em;
+}
+
+.custom-dropdown::before { /*  Custom dropdown arrow cover */
+  width: 2em;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 0 3px 3px 0;
+}
+
+.custom-dropdown::before {
+  background-color: rgba(0,0,0,.15);
+}
+
+.custom-dropdown::after {
+  color: rgba(0,0,0,.4);
+}
+
+
+/* Main Components */
 a {
   color: #A2B9B2;
   text-decoration: none;
 }
 
-/* -------------------------------- 
-
-Main Components 
-
--------------------------------- */
 .cd-schedule {
   position: relative;
   margin: 2em 0;
