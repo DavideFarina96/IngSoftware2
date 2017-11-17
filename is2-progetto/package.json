@@ -1,0 +1,14 @@
+{
+  "name": "is2-progetto",
+  "version": "1.0.0",
+  "description": "Sito che permette agli studenti del DISI di ottenere informazioni riguardo orari di autobus, aule e non solo, in modo facile e veloce",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+	"dependencies": {
+    "express": "^4.16.2"
+  }
+}
