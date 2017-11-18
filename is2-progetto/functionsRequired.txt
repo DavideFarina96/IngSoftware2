@@ -1,0 +1,16 @@
+Funzioni necessarie (i nomi possono anche essere diversi):
+
+NOTA: IO NON HO COORDINATE O COSE DEL GENERE, MA SOLO QUELLO CHE MI DICE L'UTENTE.
+I dati che posso passarti sono di questo tipo:
+direzione = "Trento", "Povo", magari altre città ma comunque stringhe
+linea = 5, 13, o comunque numeri
+
+function GetNextBus(direzione, 5)
+{
+	return orario del prossimo bus oppure oggetto json che lo contiene (e se mai spiegami come faccio ad estrarlo)
+}
+
+function GetNextBus(direzione)
+{
+	return oggetto che contiene sia l'orario del prossimo bus, che il numero del bus (la linea di quel bus)
+}

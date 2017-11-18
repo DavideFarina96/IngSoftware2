@@ -1,0 +1,336 @@
+
+<!-- AVVIO IL SERVER (da cmd, nella cartella in cui ho questo file): >python -m http.server 8000 -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Calendar API Quickstart</title>
+    <meta charset='utf-8' />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="google-signin-client_id" content="696434523021-r9uqbcgmgb1suhgc22q1jg16lo7vj3rr.apps.googleusercontent.com">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
+	
+</head>
+<body>
+    <p>Google Calendar API Quickstart</p>
+
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize-button" style="display: none;">Authorize</button>
+    <button id="signout-button" style="display: none;">Sign Out</button>
+	<!-- <button onclick="newEvent()">Add event</button> -->
+	<fieldset>
+		<legend>Inserisci dati:</legend>
+		<button id="btnEvents" class="btn btn-default" onclick="listUpcomingEvents()" >Cerca Eventi (TUTTI)</button>
+		<button id="btnTodayEvents" class="btn btn-default" onclick="listTodayEvents()" disabled="true">Cerca Eventi</button>
+		<input type="text" id="selectedDate" placeholder="Formato: yyyy-mm-dd"/>
+		
+		<hr>
+		<!-- datepicker -->
+		<div id="embeddingDatePicker"></div>
+		<input type="hidden" id="selectedDate" name="selectedDate" />
+		<script>
+			$('#embeddingDatePicker').datepicker({
+					format: 'yyyy-mm-dd'
+				})
+				.on('changeDate', function(e) {
+					// Set the value for the date input
+					$("#selectedDate").val($("#embeddingDatePicker").datepicker('getFormattedDate'));
+
+					// Revalidate it
+					$('#eventForm').formValidation('revalidateField', 'selectedDate');
+				});
+
+		</script>
+	</fieldset>
+	
+	
+    <!-- button sign in con stile google -->
+    <!--<div id="my-signin2" style="display: none;"></div>
+    <script>
+		function onSuccess(googleUser) {
+		  console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+		}
+		function onFailure(error) {
+		  console.log(error);
+		}
+		function renderButton() {
+		  gapi.signin2.render('my-signin2', {
+			'scope': 'profile email',
+			'width': 240,
+			'longtitle': true,
+			'theme': 'dark',
+			'onsuccess': onSuccess,
+			'onfailure': onFailure
+		  });
+		}
+    </script>
+	<!-- END: Google login button code -->
+
+    <pre id="content" style="text-align: center"></pre>
+	
+
+    <script type="text/javascript">
+      // Client ID and API key from the Developer Console
+      var CLIENT_ID = '696434523021-r9uqbcgmgb1suhgc22q1jg16lo7vj3rr.apps.googleusercontent.com'; 
+      var API_KEY = 'AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc';
+
+      // Array of API discovery doc URLs for APIs used by the quickstart
+      var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+
+      // Authorization scopes required by the API; multiple scopes can be
+      // included, separated by spaces.
+      var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+
+      var authorizeButton = document.getElementById('authorize-button');
+      var signoutButton = document.getElementById('signout-button');
+	  //-------var mysignin2 = document.getElementById('my-signin2');
+
+      /**
+       *  On load, called to load the auth2 library and API client library.
+       */
+      function handleClientLoad() {
+        gapi.load('client:auth2', initClient);
+      }
+
+      /**
+       *  Initializes the API client library and sets up sign-in state
+       *  listeners.
+       */
+      function initClient() {
+		gapi.client.init({
+          apiKey: API_KEY,
+          clientId: CLIENT_ID,
+          discoveryDocs: DISCOVERY_DOCS,
+          scope: SCOPES
+        }).then(function () {
+		
+			alert("Su smartphone qui non arriva");
+			// Listen for sign-in state changes.
+			window.gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+			// Handle the initial sign-in state.
+			updateSigninStatus(window.gapi.auth2.getAuthInstance().isSignedIn.get());
+			authorizeButton.onclick = handleAuthClick;
+			signoutButton.onclick = handleSignoutClick;
+        });
+		//Promise.resolve(window.gapi.auth2.getAuthInstance().signIn()).then(() => { ... })
+      }
+
+      /**
+       *  Called when the signed in status changes, to update the UI
+       *  appropriately. After a sign-in, the API is called.
+       */
+      function updateSigninStatus(isSignedIn) {
+		
+        if (isSignedIn) {
+          authorizeButton.style.display = 'none'; // sempre nascosto perchè uso il button "mysignin2" per fare il login
+		  //-------mysignin2.style.display = 'none'; // lo nascondo
+          signoutButton.style.display = 'block';
+          // attivo il button con cui chiedere gli eventi di un determinato giorno
+		  $("#btnTodayEvents").prop('disabled', false);
+		  
+		  
+		  // richiedo tutti gli eventi nel calendario
+		  listUpcomingEvents();
+		  
+        } else {
+          authorizeButton.style.display = 'block'; 
+		  //-------mysignin2.style.display = 'block'; // lo visualizzo
+          signoutButton.style.display = 'none';
+        }
+      }
+
+      /**
+       *  Sign in the user upon button click.
+       */
+      function handleAuthClick(event) {
+        gapi.auth2.getAuthInstance().signIn();
+      }
+
+      /**
+       *  Sign out the user upon button click.
+       */
+      function handleSignoutClick(event) {
+        gapi.auth2.getAuthInstance().signOut();
+		// rimuovo il contenuto della pagina.
+		$("#content").html("");
+		$("#tableEvents").html("");
+      }
+
+      /**
+       * Append a pre element to the body containing the given message
+       * as its text node. Used to display the results of the API call.
+       *
+       * @param {string} message Text to be placed in pre element.
+       */
+      function appendPre(message) {
+        var pre = document.getElementById('content');
+        var textContent = document.createTextNode(message + '\n');
+        pre.appendChild(textContent);
+      }
+
+      /**
+       * Print the summary and start datetime/date of the next ten events in
+       * the authorized user's calendar. If no events are found an
+       * appropriate message is printed.
+       */
+      function listUpcomingEvents() {
+        gapi.client.calendar.events.list({
+          'calendarId': 'primary',
+          'timeMin': (new Date()).toISOString(),
+          'showDeleted': false,
+          'singleEvents': true,
+          'orderBy': 'startTime'
+        }).then(function(response) {
+          
+		  var events = response.result.items;
+          // APPENDE il testo nel div specificato: appendPre('Upcoming events:');
+		  $("#content").html("Prossimi eventi:");
+
+          if (events.length > 0) {
+            showUpcomingEvents(events);
+          } else {
+			$("#content").html("Nessun evento futuro trovato.");
+            // appendPre('No upcoming events found.');
+          }
+        });
+      }
+	  
+	  function showUpcomingEvents(events)
+	  {
+		var table = "<thead><tr><th scope=\"col\">Evento</th><th scope=\"col\">Data</th><th scope=\"col\">Ora</th></tr></thead><tbody id=\"tabel_body\">";
+		for (i = 0; i < events.length; i++) {
+              var event = events[i];
+              var when = event.start.dateTime;
+              if (!when) {
+                when = event.start.date;
+              }
+			  // splitto "when" per separare la data dall'ora di inizio
+			  var date_time = when.split('T');
+			  var orario_zone;
+			  // devo anche separare l'orario dell'evento, dalla timeZone
+			  if(date_time[1].includes("+"))
+			  {
+				orario_zone = date_time[1].split('+');
+			  }
+			  else
+			  { 
+				if (date_time[1].includes("-"))
+					orario_zone = date_time[1].split('-');
+			  }
+			  
+              table += "<tr><td scope=\"row\">" + event.summary + "</td>";
+			  table += "<td>"+ date_time[0] + "</td>";
+			  table += "<td>"+ orario_zone[0] + "</td></tr>";
+        }
+		table += "</tbody>";
+		
+		$("#tableEvents").html(table);
+	  }
+
+    </script>
+	
+	<!-- Aggiunta evento al calendario NON VA 
+	<script>
+		function newEvent() {
+			// Refer to the JavaScript quickstart on how to setup the environment:
+			// https://developers.google.com/google-apps/calendar/quickstart/js
+			// Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
+			// stored credentials.
+
+			var event = {
+			  'summary': 'Google I/O 2015',
+			  'location': '800 Howard St., San Francisco, CA 94103',
+			  'description': 'A chance to hear more about Google\'s developer products.',
+			  'start': {
+				'dateTime': '2015-05-28T09:00:00-07:00',
+				'timeZone': 'America/Los_Angeles'
+			  },
+			  'end': {
+				'dateTime': '2015-05-28T17:00:00-07:00',
+				'timeZone': 'America/Los_Angeles'
+			  },
+			  'recurrence': [
+				'RRULE:FREQ=DAILY;COUNT=2'
+			  ],
+			  'attendees': [
+				{'email': 'lpage@example.com'},
+				{'email': 'sbrin@example.com'}
+			  ],
+			  'reminders': {
+				'useDefault': false,
+				'overrides': [
+				  {'method': 'email', 'minutes': 24 * 60},
+				  {'method': 'popup', 'minutes': 10}
+				]
+			  }
+			};
+
+			var request = gapi.client.calendar.events.insert({
+			  'calendarId': 'primary',
+			  'resource': event
+			});
+
+			request.execute(function(event) {
+			  appendPre('Event created: ' + event.htmlLink);
+			});
+		}
+	</script> -->
+
+	<!-- Data una data, restituisce gli eventi di quel giorno -->
+	<script>
+		function listTodayEvents() {
+			$("#tableEvents").html("");
+			var selectedDate = $("#selectedDate").val();
+		
+			gapi.client.calendar.events.list({
+			  'calendarId': 'primary',
+			  'timeMin': selectedDate+'T00:00:00Z' ,
+			   'timeMax': selectedDate+'T23:59:59Z',
+			  'showDeleted': false,
+			  'singleEvents': true,
+			  /*'maxResults': 10,*/
+			  'orderBy': 'startTime'
+			}).then(function(response) {
+			  
+			  var events = response.result.items;
+			  $("#content").html("Prossimi eventi:");
+
+			  if (events.length > 0) {
+				showUpcomingEvents(events);
+			  } else {
+				$("#content").html("Nessun evento futuro trovato.");
+				// appendPre('No upcoming events found.');
+			  }
+			});
+        }
+	</script>
+	
+	
+	<script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+	
+	<!-- script che genera il button di login -->
+	<!--<script defer src="https://apis.google.com/js/platform.js?onload=renderButton"></script>-->
+	
+	<div class="container-fluid">
+		<div class="row">
+			<table class="table table-striped" id="tableEvents" >
+			  
+			</table>
+		</div>
+	</div>
+	
+  </body>
+</html>
