@@ -68,7 +68,7 @@
                         <a href="/stops-map">Orari Trasporti</a>
                     </li>
 					<li>
-                        <a href="#">Calendario</a>
+                        <a href="/calendar">Calendario</a>
                     </li>
 					<li>
                         <a href="#">Preferiti</a>
@@ -124,7 +124,7 @@
 					</div>
 					<div class="row">
 						<div class="col-xs-6 alignContainer" style="background-color: #F7AA1B; height: 50vh"> <!-- E65100 -->
-							<a href="#" class="alignContent" >
+							<a href="/calendar" class="alignContent" >
 								<img class="imgResize" src="images/calendar-white.png" />
 								<p style="color: white; ">Il tuo calendario</p> 
 							</a>
@@ -144,10 +144,10 @@
 			
 			<footer class="footer" >
 				<div class="input-group">
-				    <input type="text" class="form-control" placeholder="Cosa stai cercando?">
+				    <input type="text" class="form-control" id="txtInputValue" placeholder="Cosa stai cercando?">
 					<span class="input-group-btn">
 						<button class="btn btn-default" id="btnInputVocale"><i class="fa fa-microphone"></i></button>
-						<button class="btn btn-default" id="btnSend"><span class="glyphicon glyphicon-send"></span></button>
+						<button class="btn btn-default" id="btnSend" onclick="sendToBot()"><span class="glyphicon glyphicon-send"></span></a>
 					</span>
 				</div>
 			</footer>
@@ -182,6 +182,12 @@
                     $('a[aria-expanded=true]').attr('aria-expanded', 'false');
                 });
             });
+			
+			// quando viene cliccato il button "Invia" viene chiamata la pagina "bot" e gli viene passato il testo inserito dall'utente
+			function sendToBot()
+			{
+				window.location = "/bot?v=" + $("#txtInputValue").val();
+			}
         </script>
     </body>
 </html>

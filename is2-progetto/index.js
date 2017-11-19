@@ -3,7 +3,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var util = require('util');
-var path = require('path')
+var path = require('path');
 
 //instantiate express
 var app = express();
@@ -17,6 +17,23 @@ app.use(bodyParser.json());
 
 // set our port
 var port = process.env.PORT || 8080;
+
+
+// response-creating function. Used for the bot.
+function CreateBotResponse(msg)
+{
+	var botResponse = "";
+	botResponse += "{";
+	botResponse += "\"speech\": " + "\"" + msg + "\"" + ",";
+	botResponse += "\"displayText\": " + "\"" + msg + "\"" + ",";
+	botResponse += "\"data\": {},";
+	botResponse += "\"contextOut\": [],";
+	botResponse += "\"source\": \"DISIer\"";
+	botResponse += "}";
+
+	console.log(botResponse);
+	return botResponse;
+}
 
 // IMPORTANTE: restituire i file richiesti dal client(come lo stile, le immagini)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -55,16 +72,42 @@ app.all('/orari_Autobus', function(request, response){
 });
 /* fine codice di prova */
 
+// orari lezione e disponibilità delle varie aule
 app.all('/orari_e_aule', function(request, response){
     response.sendfile('orari_e_aule.html');
 });
 
+//bot-related paths
+app.all('/bot', function(request, response){
+	response.sendfile('bot.html');
+});
+
+// pagina google calendar per visualizzare gli impegni dell'utente
+app.all('/calendar', function(request, response){
+	response.sendfile('quickstart.html');
+});
+
+
+app.post('/bot_message', function(req, res) {
+	var numeroBus = req.body.result.parameters.busNumber;
+	var citta = req.body.result.parameters.location;
+
+	//a questo punto esegui la query. Per ora, è simulato
+	var message = "Mi hai chiesto di andare a " + citta + " con il " + numeroBus;
+	var createdResponse = CreateBotResponse(message);
+
+	//invia la risposta
+	res.set('Content-Type', 'application/json');
+	res.send(createdResponse);
+});
 
 //handle requests on /
 app.all('/', function (req, res) {
 	res.sendfile('homepage.html');
     
 });
+
+
 
 
 app.all('/info', function (req, res) {
