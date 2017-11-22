@@ -10,7 +10,14 @@
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
 	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
-  	
+  	<script type="text/javascript">
+		$.ajax({
+			url: '/json',
+			complete: function(data) {
+				console.log(data);
+			}
+		});
+	</script>
 	<title>Schedule</title>
 </head>
 <body>

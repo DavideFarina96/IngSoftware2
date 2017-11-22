@@ -76,8 +76,22 @@ app.all('/orari_Autobus', function(request, response){
 /* fine codice di prova */
 
 // orari lezione e disponibilità delle varie aule
-app.all('/orari_e_aule', function(request, response){
-    response.sendfile('orari_e_aule.html');
+app.all('/orari_e_aule', function(req, response){
+	response.sendfile('orari_e_aule.html');
+});
+
+app.all('/json', function(req, response, next){
+	var url = 'https://easyroom.unitn.it/Orario/grid_call.php?form-type=corso&anno=2017&corso=0514G&anno2=P0405%7C3&date=20-11-2017&_lang=en&all_events=0';
+		
+	request({
+		url: url,
+		json: true
+	}, function (error, res, body) {
+
+		if (!error && res.statusCode === 200) {
+			response.json(body);
+		}
+	})
 });
 
 //bot-related paths
