@@ -3,6 +3,25 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		function InsertGetIntoBot() {
+			var msg = "";
+			var url = window.location.toString();
+			var paramsString = url.split('?')[1];
+			if(paramsString == null)
+				return;
+
+			var params = paramsString.split('&');
+
+			for(var i = 0; i < params.length; i++)
+			{
+				var name = params[i].split('=')[0];
+				var val = params[i].split('=')[1];
+				if(name == "msg")
+					msg = val;
+			}		
+		}
+	</script>
 </head>
 <body>
 <nav class="navbar navbar-default"> 
@@ -17,7 +36,7 @@
             </div>
 			</div>
 </nav> 
-<iframe
+<iframe id="myFrame"
     width="350"
     height="430"
     src="https://console.dialogflow.com/api-client/demo/embedded/308d0e69-3470-4aa3-96b6-58686a18d82b">
