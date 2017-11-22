@@ -9,51 +9,101 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="google-signin-client_id" content="696434523021-r9uqbcgmgb1suhgc22q1jg16lo7vj3rr.apps.googleusercontent.com">
 	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-	
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
+	<!-- Include Date Range Picker -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
-	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
-	
+
 </head>
-<body>
-    <p>Google Calendar API Quickstart</p>
+<body>	
+	<nav class="navbar navbar-default"> 
+        <div class="container-fluid">
+			<div class="navbar-header col-xs-12">
+				<ul class="nav navbar-nav navbar-left col-xs-5 col-sm-3">
+                     <li><a href="/"><span class="glyphicon glyphicon-arrow-left"></span> Home</a></li>
+                </ul>
+				<ul class="nav navbar-nav hidden-xs col-sm-5">
+                    <li align="center"><a href="/">DISIer</a></li>
+                </ul>
+				<ul class="nav navbar-nav col-xs-7 col-sm-3">
+					<li align="right">
+					<button id="authorize-button" class="btn btn-danger btn-social btn-google navbar-btn navbar-right" > <!--style="display: none">-->
+                     <span class="fa fa-google"></span> Sign in with Google
+					</button>
+					</li>
+					<li align="right">
+					<button id="signout-button" class="btn btn-danger btn-social btn-google navbar-btn navbar-right" > <!--style="display: none">-->
+						 <span class="fa fa-google"></span> Sign out
+					</button>
+					</li>
+				</ul>
+				
+            </div>
+        </div>
+    </nav> 
+	
+	<div class="container-fluid">
+		<div class="row" style="text-align: center">
+			<h2>Il tuo Calendario</2>
+		</div>
 
-    <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize-button" style="display: none;">Authorize</button>
-    <button id="signout-button" style="display: none;">Sign Out</button>
-	<!-- <button onclick="newEvent()">Add event</button> -->
-	<fieldset>
-		<legend>Inserisci dati:</legend>
-		<button id="btnEvents" class="btn btn-default" onclick="listUpcomingEvents()" >Cerca Eventi (TUTTI)</button>
-		<button id="btnTodayEvents" class="btn btn-default" onclick="listTodayEvents()" disabled="true">Cerca Eventi</button>
-		<input type="text" id="selectedDate" placeholder="Formato: yyyy-mm-dd"/>
+		<!--DA TENERE : NON funziona finche ci sono altri 2 button nel codice con gli stessi id id="signout-button" e id="authorize-button"
+			<div class="row">
+			<div class="col-xs-12">
+				<div class="col-xs-4 col-sm-3 col-lg-2 ">
+					<a class="btn btn-danger btn-social btn-google" id="authorize-button" style="display: none;">
+						<span class="fa fa-google"></span> Sign in with Google
+					</a>
+					<a class="btn btn-danger btn-social btn-google" id="signout-button" style="display: none;">
+						<span class="fa fa-google"></span> Sign out
+					</a>
+				</div>
+				<div class="col-xs-8 col-sm-3 col-lg-2 ">
+					
+				</div>
+			</div>
+		</div> -->
 		
 		<hr>
-		<!-- datepicker -->
-		<div id="embeddingDatePicker"></div>
-		<input type="hidden" id="selectedDate" name="selectedDate" />
-		<script>
-			$('#embeddingDatePicker').datepicker({
-					format: 'yyyy-mm-dd'
-				})
-				.on('changeDate', function(e) {
-					// Set the value for the date input
-					$("#selectedDate").val($("#embeddingDatePicker").datepicker('getFormattedDate'));
-
-					// Revalidate it
-					$('#eventForm').formValidation('revalidateField', 'selectedDate');
-				});
-
-		</script>
-	</fieldset>
+		<div class="row">
+			<div>
+			<!-- date picker -->
+			<div class="col-xs-12">
+				<div class="col-xs-12 col-sm-8 input-group">
+					
+					<span class="input-group-btn">
+						<button id="btnTodayEvents" class="btn btn-default" onclick="listTodayEvents()" disabled="true">Eventi per questa data: </button>
+					</span>
+					<input class="form-control" id="selectedDate" name="selectedDate" placeholder="Seleziona data" type="text"/>
+					<!-- <div class="input-group-addon"><i class="fa fa-calendar"></i></div> -->
+			   </div>
+			</div>
+			<div class="col-xs-12" style="margin-top: 10px; display: flex;   justify-content: center;">
+				<button id="btnEvents" class="col-xs-12 col-sm-8 btn btn-primary" onclick="listUpcomingEvents()">Tutti gli Eventi</button>
+			</div>
+			</div>
+		</div>
+	
+		<!-- div contenente il titolo "Prossimi eventi / Nessun evento trovato" -->
+		<pre id="content" style="text-align: center; margin-top: 10px"></pre>	
+		
+		<!-- tabella in cui viene visualizzata la lista degli eventi -->
+		<div class="container-fluid">
+			<div class="row">
+				<table class="table table-striped" id="tableEvents" >
+				  
+				</table>
+			</div>
+		</div>
 	
 	
-    <!-- button sign in con stile google -->
+	</div>
+	
+	<!-- PROVE: volendo funzionano, ma ho usato un altro stile per i button -->
+	<!-- button sign in con stile google -->
     <!--<div id="my-signin2" style="display: none;"></div>
     <script>
 		function onSuccess(googleUser) {
@@ -74,11 +124,14 @@
 		}
     </script>
 	<!-- END: Google login button code -->
-
-    <pre id="content" style="text-align: center"></pre>
+	<!-- script che genera il button di login -->
+	<!--<script defer src="https://apis.google.com/js/platform.js?onload=renderButton"></script>-->
 	
-
-    <script type="text/javascript">
+	<!-- ***************** FINE codice layout pagina ************************ -->
+	
+	<!-- ***************** Script gestione pagina *************************** -->
+	<script type="text/javascript">
+	
       // Client ID and API key from the Developer Console
       var CLIENT_ID = '696434523021-r9uqbcgmgb1suhgc22q1jg16lo7vj3rr.apps.googleusercontent.com'; 
       var API_KEY = 'AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc';
@@ -113,7 +166,7 @@
           scope: SCOPES
         }).then(function () {
 		
-			alert("Su smartphone qui non arriva");
+			console.log("Su smartphone qui non arriva");
 			// Listen for sign-in state changes.
 			window.gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
@@ -137,16 +190,17 @@
           signoutButton.style.display = 'block';
           // attivo il button con cui chiedere gli eventi di un determinato giorno
 		  $("#btnTodayEvents").prop('disabled', false);
-		  
-		  
+	  
 		  // richiedo tutti gli eventi nel calendario
 		  listUpcomingEvents();
 		  
         } else {
-          authorizeButton.style.display = 'block'; 
+          authorizeButton.style.display = 'block';  /// OSSSSS: quando lo eseguo, l' "align="right" smette di funzionare /////////
 		  //-------mysignin2.style.display = 'block'; // lo visualizzo
           signoutButton.style.display = 'none';
         }
+		
+		
       }
 
       /**
@@ -237,6 +291,33 @@
 		$("#tableEvents").html(table);
 	  }
 
+	  <!-- funzione che restituisce gli eventi in programma per la data specificata -->
+	  function listTodayEvents() {
+			$("#tableEvents").html("");
+			var selectedDate = $("#selectedDate").val();
+		
+			gapi.client.calendar.events.list({
+			  'calendarId': 'primary',
+			  'timeMin': selectedDate+'T00:00:00Z' ,
+			   'timeMax': selectedDate+'T23:59:59Z',
+			  'showDeleted': false,
+			  'singleEvents': true,
+			  /*'maxResults': 10,*/
+			  'orderBy': 'startTime'
+			}).then(function(response) {
+			  
+			  var events = response.result.items;
+			  $("#content").html("Prossimi eventi:");
+
+			  if (events.length > 0) {
+				showUpcomingEvents(events);
+			  } else {
+				$("#content").html("Nessun evento futuro trovato.");
+				// appendPre('No upcoming events found.');
+			  }
+			});
+        }
+	  
     </script>
 	
 	<!-- Aggiunta evento al calendario NON VA 
@@ -286,51 +367,24 @@
 		}
 	</script> -->
 
-	<!-- Data una data, restituisce gli eventi di quel giorno -->
-	<script>
-		function listTodayEvents() {
-			$("#tableEvents").html("");
-			var selectedDate = $("#selectedDate").val();
-		
-			gapi.client.calendar.events.list({
-			  'calendarId': 'primary',
-			  'timeMin': selectedDate+'T00:00:00Z' ,
-			   'timeMax': selectedDate+'T23:59:59Z',
-			  'showDeleted': false,
-			  'singleEvents': true,
-			  /*'maxResults': 10,*/
-			  'orderBy': 'startTime'
-			}).then(function(response) {
-			  
-			  var events = response.result.items;
-			  $("#content").html("Prossimi eventi:");
-
-			  if (events.length > 0) {
-				showUpcomingEvents(events);
-			  } else {
-				$("#content").html("Nessun evento futuro trovato.");
-				// appendPre('No upcoming events found.');
-			  }
-			});
-        }
-	</script>
 	
-	
+	<!-- caricamento delle api google per il login -->
 	<script async defer src="https://apis.google.com/js/api.js"
       onload="this.onload=function(){};handleClientLoad()"
       onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>
 	
-	<!-- script che genera il button di login -->
-	<!--<script defer src="https://apis.google.com/js/platform.js?onload=renderButton"></script>-->
-	
-	<div class="container-fluid">
-		<div class="row">
-			<table class="table table-striped" id="tableEvents" >
-			  
-			</table>
-		</div>
-	</div>
+	<script>
+		<!-- codice per la gestione del datapicker -->
+			$(document).ready(function(){
+				var date_input=$('input[name="selectedDate"]'); //our date input has the name "date"
+				date_input.datepicker({
+					format: 'yyyy-mm-dd',
+					todayHighlight: true,
+					autoclose: true,
+				})
+			})
+	</script>
 	
   </body>
 </html>

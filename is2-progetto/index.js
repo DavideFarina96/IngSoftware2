@@ -4,9 +4,13 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var util = require('util');
 var path = require('path');
+var request = require('request');
+//var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+//var http = require('https');
 
 //instantiate express
 var app = express();
+//var xhr = new XMLHttpRequest();
 
 /* Configure express app to use bodyParser()
  * to parse body as URL encoded data
@@ -92,14 +96,62 @@ app.post('/bot_message', function(req, res) {
 	var numeroBus = req.body.result.parameters.busNumber;
 	var citta = req.body.result.parameters.location;
 
-	//a questo punto esegui la query. Per ora, è simulato
-	var message = "Mi hai chiesto di andare a " + citta + " con il " + numeroBus;
-	var createdResponse = CreateBotResponse(message);
+	var myUrl = "https://maps.googleapis.com/maps/api/directions/json?origin=Povo&destination=" + citta + "&alternative=true&transit_mode=train|tram|bus&mode=transit&key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc";
+	var times = "qualcosa";
 
-	//invia la risposta
-	res.set('Content-Type', 'application/json');
-	res.send(createdResponse);
+	request({	url: myUrl,  
+				method: "GET",  
+				json: true,
+				headers: {
+						'Origin': "https://is2-progetto.herokuapp.com"
+					} }, function(error, response, body) {
+					if (!error && response.statusCode == 200) 
+					{	
+						times = handleDirections(body);
+						var msg = "";	
+						// -1 = no bus.		
+						if(times != "-1")
+						{	
+							//Aggiungere controllo bus
+							if(numeroBus == times.line)
+								msg = "Il prossimo " + times.line + " per " + citta + " è alle " + times.time + ".";
+							else
+								msg = "Non c'è il " + numeroBus + ", ma puoi prendere il " + times.line + " alle " + times.time + ".";
+						}						
+						else
+							msg = "Non c'è un autobus per " + citta + ".";						
+						var createdBotResponse = CreateBotResponse(msg);
+						res.set('Content-Type', 'application/json');	
+						res.send(createdBotResponse);
+					}
+					else
+					{ 
+						var createdResponse = CreateBotResponse("errore");
+						res.set('Content-Type', 'application/json');	
+						res.send(createdResponse);	
+					}
+	});
 });
+
+	function handleDirections(data){
+			//console.log(data);
+			var times = {time: "00.00", stop: "fermata", line: "0", destination:"_"};
+			for(var i = 0; i < data.routes.length; i++)
+			{
+					for(var j = 0; j<data.routes[i].legs[0].steps.length; j++){
+						if(data.routes[0].legs[0].steps[j].travel_mode == "TRANSIT"){
+							//console.log(data);
+							times.time = data.routes[0].legs[0].steps[j].transit_details.departure_time.text;
+							times.stop = data.routes[0].legs[0].steps[j].transit_details.departure_stop.name;
+							times.line = data.routes[0].legs[0].steps[j].transit_details.line.short_name;
+							times.destination = data.routes[0].legs[0].steps[j].transit_details.arrival_stop.name;
+							return(times);
+						}
+				}
+			}
+			return "-1";
+		
+		}
 
 //handle requests on /
 app.all('/', function (req, res) {
