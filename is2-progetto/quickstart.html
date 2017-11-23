@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Google Calendar API Quickstart</title>
+    <title>Il tuo Google Calendar</title>
     <meta charset='utf-8' />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="google-signin-client_id" content="696434523021-r9uqbcgmgb1suhgc22q1jg16lo7vj3rr.apps.googleusercontent.com">
@@ -19,7 +19,7 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 	<!-- codice per la gestione della model view di caricamento -->
-	<!-- OSS: in locale il file si trova in public/js/modal.... ma per heroku invece va lasciato cosi -><script type="text/javascript" src="/modalWindowBootstrap.js"></script>-->
+	<!--<script type="text/javascript" src="/modalWindowBootstrap.js"></script>-->
 	
 	
 	<style> 
@@ -59,7 +59,7 @@
 			</div>	
     </nav> 
 	
-	<!-- // visualizzo una model view che blocca l'interazione dell'utente con la pagina, finche non è caricata del tutto	
+	<!-- // visualizzo una model view che blocca l'interazione dell'utente con la pagina, finche non è caricata del tutto  
 	<button type="button" class="btn btn-success" onclick="waitingDialog.show('Custom message');setTimeout(function () {waitingDialog.hide();}, 10000);">Show dialog</button>
 	-->
 	
@@ -88,7 +88,7 @@
 		<hr>
 		<div class="row">
 			<!-- date picker -->
-			<div class="col-xs-12">
+			<div class="col-xs-12 col-sm-10 col-sm-offset-1">
 				<div class="col-xs-12 input-group">
 					<input class="form-control" id="selectedDate" name="selectedDate" placeholder="Seleziona data" type="text"  disabled="true"/>
 					<span class="input-group-btn">
@@ -98,34 +98,37 @@
 				</div>
 			</div>
 			
-			<div class="btn-group col-xs-12 col-sm-6 col-md-5 xs_verticalSpace col-md-offset-1">
-				<div class="btn-group">
-					<button class="btn btn-primary dropdown-toggle col-xs-12" type="button" id="dropdownMenuCalendari" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  disabled="true">
-						I tuoi calendari <span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" aria-labelledby="dropdownMenuCalendari" id="listaCalendari">
-					</ul>
-				</div>
+			<div class="btn-group col-xs-12 col-sm-5 xs_verticalSpace col-sm-offset-1">
+					<div class="btn-group">
+						<button class="btn btn-primary dropdown-toggle col-xs-12" type="button" id="dropdownMenuCalendari" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  disabled="true">
+							I tuoi calendari <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="dropdownMenuCalendari" id="listaCalendari">
+						</ul>
+					</div>
 
-				<button id="btnEvents" class="btn btn-primary" onclick="setSelectedCalendar()"  disabled="true">Eventi calendario</button>
+					<button id="btnEvents" class="btn btn-primary" onclick="setSelectedCalendar()"  disabled="true">Eventi calendario</button>
 			</div>
-				
-			<div class="col-xs-12 col-sm-6  col-md-5 xs_verticalSpace">
-				<button type="button" id="btnAddEvent" class="btn btn-primary col-xs-12" onclick="addEventToCalendar()" disabled="true">Add Event NON VA</button>
-			</div>
+					
+			<div class="col-xs-12 col-sm-5 xs_verticalSpace">
+					<button type="button" id="btnAddEvent" class="btn btn-primary col-xs-12" onclick="addEventToCalendar()" disabled="true">Add Event NON VA</button>
+			</div> 
 	</div>
 	
 	<hr>
 		
 	<!-- div contenente il titolo "Prossimi eventi / Nessun evento trovato" -->
 	<div id="content" style="text-align: center; margin-top: 10px"></div>	
-		
+	
+	
 	<!-- tabella in cui viene visualizzata la lista degli eventi -->
 	<div class="container-fluid">
 		<div class="row">
-			<table class="table table-striped" id="tableEvents" >
+			<div class="col-xs-12 col-sm-10 col-sm-offset-1">
+				<table class="table table-striped" id="tableEvents" >
 			  
-			</table>
+				</table>
+			</div>
 		</div>
 	</div>
 	
@@ -156,6 +159,7 @@
 	<!--<script defer src="https://apis.google.com/js/platform.js?onload=renderButton"></script>-->
 	
 	<!-- ***************** FINE codice layout pagina ************************ -->
+	
 	
 	<!-- ***************** Script gestione pagina *************************** -->
 	<script type="text/javascript">
@@ -302,30 +306,52 @@
 		/* funzione che prende i dati ricevuti dal server e li visualizza sulla pagina */
 		function showUpcomingEvents(events)
 		{
+			console.log(events);
 			var table = "<thead><tr><th scope=\"col\">Evento</th><th scope=\"col\">Data</th><th scope=\"col\">Ora</th></tr></thead><tbody id=\"tabel_body\">";
-			for (i = 0; i < events.length; i++) {
+			for (i = 0; i < events.length; i++) 
+			{
 				  var event = events[i];
 				  var when = event.start.dateTime;
 				  if (!when) {
 					when = event.start.date;
 				  }
-				  // splitto "when" per separare la data dall'ora di inizio
-				  var date_time = when.split('T');
-				  var orario_zone;
-				  // devo anche separare l'orario dell'evento, dalla timeZone
-				  if(date_time[1].includes("+"))
+				  
+				  // controllo se è specificata la dateTime dell'evento:
+				  // Se SI, l'evento ha una data di inizio e di fine ma NON un orario
+				  if(event.start.dateTime == undefined || event.end.dateTime == undefined)
 				  {
-					orario_zone = date_time[1].split('+');
+					table += "<tr><td scope=\"row\">" + event.summary + "</td>";
+					table += "<td>"+ event.end.date + "</td>";
+					table += "<td>Tutto il giorno</td></tr>";
 				  }
 				  else
-				  { 
-					if (date_time[1].includes("-"))
-						orario_zone = date_time[1].split('-');
+				  { // Altrimenti vuol dire che dura tutto il giorno
+					  
+					  // splitto "when" per separare la data dall'ora di inizio
+					  var date_time = when.split('T');
+					  var orario_zone;
+					  
+					  if(date_time.length > 0) // vuol dire che nell'evento del calendario è presente una data di inizio
+					  {
+						  // devo anche separare l'orario dell'evento, dalla timeZone
+						  if(date_time[1].includes("+"))
+						  {
+							orario_zone = date_time[1].split('+');
+						  }
+						  else
+						  { 
+							if (date_time[1].includes("-"))
+								orario_zone = date_time[1].split('-');
+						  }
+					  }
+					  else { // nell'evento è specificata solo la data --> l'evento dura tutto i giorno
+						orario_zone = "Tutto il giorno";
+					  }
+					  
+					  table += "<tr><td scope=\"row\">" + event.summary + "</td>";
+					  table += "<td>"+ date_time[0] + "</td>";
+					  table += "<td>"+ orario_zone[0] + "</td></tr>";
 				  }
-				  
-				  table += "<tr><td scope=\"row\">" + event.summary + "</td>";
-				  table += "<td>"+ date_time[0] + "</td>";
-				  table += "<td>"+ orario_zone[0] + "</td></tr>";
 			}
 			table += "</tbody>";
 			

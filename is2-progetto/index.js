@@ -1,5 +1,7 @@
 /*globals require, console, process */
 
+// codice per attivare l'https 
+var sslRedirect = require('heroku-ssl-redirect');
 var express = require('express');
 var bodyParser = require('body-parser');
 var util = require('util');
@@ -7,6 +9,7 @@ var path = require('path');
 var request = require('request');
 //var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 //var http = require('https');
+
 
 //instantiate express
 var app = express();
@@ -41,7 +44,7 @@ function CreateBotResponse(msg)
 // IMPORTANTE: restituire i file richiesti dal client(come lo stile, le immagini)
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.all('/stops-map', function(req, res){
+/*PROVE::::: app.all('/stops-map', function(req, res){
     // tolto temporaneamente response.sendfile('stops-map.html');
 	// ******* codice tmp
 	res.statusCode = 200;
@@ -55,6 +58,7 @@ app.all('/stops-map', function(req, res){
         return res.status(200).json({});
     }
     
+	
     //write response
     res.write('<h3>Pagine mappe:</h3>');
 	res.write('<a href=\'/stops-map\'>/stops-map</a> --> collega alla pagina che visualizza le fermate di autobus e treni nelle vicinanze dell\'utente. \n');
@@ -63,35 +67,37 @@ app.all('/stops-map', function(req, res){
 
     //send response
     res.end();
-});
-
-
-/* prove. codice per gestire il "******* codice tmp" */
+}); prove. codice per gestire il "******* codice tmp" 
 app.all('/posizione_dinamica', function(request, response){
     response.sendfile('posizione_dinamica.html');
-});
+});*/
+
+
+// quando l'utente entra nella pagina con la mappa autobus, viene reindirizzato alla stessa pagina ma in versione https (perchè in http la localizzazione non va)
 app.all('/orari_Autobus', function(request, response){
+    response.redirect('https://is2-progetto.herokuapp.com/orari_Autobus_s');
+});
+app.all('/orari_Autobus_s', function(request, response){
     response.sendfile('orari_Autobus.html');
 });
-/* fine codice di prova */
+//****************************** fine google maps
+
+
+// pagina google calendar per visualizzare gli impegni dell'utente
+app.all('/calendar_s', function(request, response){
+	response.sendfile('quickstart.html');
+});
+app.all('/calendar', function(request, response){
+    response.redirect('https://is2-progetto.herokuapp.com/calendar_s');
+});
+//****************************** fine google calendar
+
+
+
 
 // orari lezione e disponibilità delle varie aule
-app.all('/orari_e_aule', function(req, response){
-	response.sendfile('orari_e_aule.html');
-});
-
-app.all('/json', function(req, response, next){
-	var url = 'https://easyroom.unitn.it/Orario/grid_call.php?form-type=corso&anno=2017&corso=0514G&anno2=P0405%7C3&date=20-11-2017&_lang=en&all_events=0';
-		
-	request({
-		url: url,
-		json: true
-	}, function (error, res, body) {
-
-		if (!error && res.statusCode === 200) {
-			response.json(body);
-		}
-	})
+app.all('/orari_e_aule', function(request, response){
+    response.sendfile('orari_e_aule.html');
 });
 
 //bot-related paths
@@ -116,12 +122,6 @@ app.all('/bot_content', function(req, response){
 		
 	});*/
 });
-
-// pagina google calendar per visualizzare gli impegni dell'utente
-app.all('/calendar', function(request, response){
-	response.sendfile('quickstart.html');
-});
-
 
 app.all('/bot_message', function(req, res) {
 	res.set('Content-Type', 'application/json');
