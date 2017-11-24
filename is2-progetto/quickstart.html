@@ -15,9 +15,14 @@
 	
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-	<!-- Include Date Range Picker -->
+	<!-- Include Date Picker -->
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+	<!-- Include Date / Time picker NON VANNO-->
+	<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>--
+	
+	
 	<!-- codice per la gestione della model view di caricamento -->
 	<!--<script type="text/javascript" src="/modalWindowBootstrap.js"></script>-->
 	
@@ -111,7 +116,7 @@
 			</div>
 					
 			<div class="col-xs-12 col-sm-5 xs_verticalSpace">
-					<button type="button" id="btnAddEvent" class="btn btn-primary col-xs-12" onclick="addEventToCalendar()" disabled="true">Add Event NON VA</button>
+					<button type="button" id="btnAddEvent" class="btn btn-primary col-xs-12" disabled="true"  data-toggle="modal" data-target="#addEventModal">Aggiungi Evento</button>
 			</div> 
 	</div>
 	
@@ -131,6 +136,40 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- codice dello stile della finestra (modal) con cui l'utente specifica i dati dell'evento che sta creando -->
+	<div class="modal fade" id="addEventModal" role="dialog">
+		<div class="modal-dialog">
+		
+		  <!-- Modal content-->
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			  <h4 class="modal-title">Dati Evento</h4>
+			</div>
+			<div class="modal-body">		  
+                <div class="form-group">
+					<input class="form-control" id="titolo" name="titolo" placeholder="Titolo evento" type="text"/>
+					<input class="form-control" id="descrizione" name="descrizione" placeholder="Descrizione evento" type="text"/>
+					<input class="form-control" id="eventDayStart" name="eventDayStart" placeholder="Data inizio" type="text"/>
+					<input class="form-control" id="eventDayEnd" name="eventDayEnd" placeholder="Data fine" type="text"/>
+					<input class="form-control" id="eventTimeStart" name="eventTimeStart" placeholder="Ora inizio hh:mm" type="text"/>
+					<input class="form-control" id="eventTimeEnd" name="eventTimeEnd" placeholder="Ora fine hh:mm" type="text"/>
+					<!-- Verrà messo al posto dei campi per l'ora di inizio e fine <select class="form-control">  <option>Default select</option> </select> -->
+				</div>
+			
+			
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" onclick="setEventInformation()" data-dismiss="modal">Salva</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		  
+		</div>
+	</div>
+	
+	
 	
 		
 	<!-- PROVE: volendo funzionano, ma ho usato un altro stile per i button -->
@@ -173,7 +212,8 @@
 
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
-      var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+	  // ES: "https://www.googleapis.com/auth/calendar.readonly" allows users to access their personal calendars BUT they CAN NOT modify them
+      var SCOPES = "https://www.googleapis.com/auth/calendar";
 
       var authorizeButton = document.getElementById('authorize-button');
       var signoutButton = document.getElementById('signout-button');
@@ -190,6 +230,7 @@
        *  listeners.
        */
       function initClient() {
+
 		gapi.client.init({
           apiKey: API_KEY,
           clientId: CLIENT_ID,
@@ -197,7 +238,6 @@
           scope: SCOPES
         }).then(function () {
 		
-			console.log("Su smartphone qui non arriva");
 			// Listen for sign-in state changes.
 			window.gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
@@ -221,7 +261,6 @@
 			// --> quindi sblocco tutti i bottoni
 			disableButton(false);
 			
-	  		  
 			// mi facci dare la lista di tutti i calendari dell'utente
 			listCalendars();
 		  
@@ -230,9 +269,6 @@
 			signoutButton.style.display = 'none';
 			
 			disableButton(true);
-			
-			// NON VA: chiudo la model view di caricamento e permetto all'utente di interagire con la pagina....
-			//waitingDialog.hide();
         }
 		
 		
@@ -278,7 +314,7 @@
 		selectedCalendarJson.id = calendarId;
 		selectedCalendarJson.summary = calendarSummary;
 		selectedCalendarJson.backgroundColor = calendarBackgroundColor;
-		console.log("Selected: " + selectedCalendarJson.id);
+		console.log("Selected Calendar ID: " + selectedCalendarJson.id);
 		
         gapi.client.calendar.events.list({
           'calendarId': calendarId,	//default: 'primary',
@@ -288,18 +324,16 @@
           'orderBy': 'startTime'
         }).then(function(response) {
           
-		  var events = response.result.items;
-		  
-          // APPENDE il testo nel div specificato: appendPre('Upcoming events:');
-		  $("#content").html("Prossimi eventi <span class='badge' style='background-color: "+ calendarBackgroundColor +"'>"+ calendarSummary +"</span>");
+			var events = response.result.items;
+				
+			// APPENDE il testo nel div specificato: appendPre('Upcoming events:');
+			$("#content").html("Prossimi eventi <span class='badge' style='background-color: "+ calendarBackgroundColor +"'>"+ calendarSummary +"</span>");
 
-          if (events.length > 0) {
-            showUpcomingEvents(events);
-          } else {
-			$("#content").html("Nessun evento futuro trovato in <span class='badge' style='background-color: "+ calendarBackgroundColor +"'>"+ calendarSummary +"</span>");
-            // appendPre('No upcoming events found.');
-          }
-		  
+			if (events.length > 0) {
+				showUpcomingEvents(events);
+			} else {
+				$("#content").html("Nessun evento futuro trovato in <span class='badge' style='background-color: "+ calendarBackgroundColor +"'>"+ calendarSummary +"</span>");
+			}
         });
       }
 	  
@@ -307,7 +341,7 @@
 		function showUpcomingEvents(events)
 		{
 			console.log(events);
-			var table = "<thead><tr><th scope=\"col\">Evento</th><th scope=\"col\">Data</th><th scope=\"col\">Ora</th></tr></thead><tbody id=\"tabel_body\">";
+			var table = "<thead><tr><th scope=\"col\">Evento</th><th scope=\"col\">Data Inizio</th><th scope=\"col\">Ora Inizio</th></tr></thead><tbody id=\"tabel_body\">";
 			for (i = 0; i < events.length; i++) 
 			{
 				  var event = events[i];
@@ -315,6 +349,7 @@
 				  if (!when) {
 					when = event.start.date;
 				  }
+				  
 				  
 				  // controllo se è specificata la dateTime dell'evento:
 				  // Se SI, l'evento ha una data di inizio e di fine ma NON un orario
@@ -334,13 +369,13 @@
 					  if(date_time.length > 0) // vuol dire che nell'evento del calendario è presente una data di inizio
 					  {
 						  // devo anche separare l'orario dell'evento, dalla timeZone
-						  if(date_time[1].includes("+"))
+						  if(date_time[1].indexOf("+") >= 0) // se il + è presente --> true
 						  {
 							orario_zone = date_time[1].split('+');
 						  }
 						  else
 						  { 
-							if (date_time[1].includes("-"))
+							if (date_time[1].indexOf("-") >= 0)
 								orario_zone = date_time[1].split('-');
 						  }
 					  }
@@ -354,7 +389,7 @@
 				  }
 			}
 			table += "</tbody>";
-			
+
 			$("#tableEvents").html(table);
 			
 			
@@ -420,28 +455,63 @@
 			});
 			
 		}
-
-		/* funzione che aggiunge al calendario un evento nella data specificata e con i dati specificati */
-		function addEventToCalendar()
+	
+		/* funzione aggiunge al calendario selezionato dall'utente, l'evento con i dettagli specificati */
+		function addEventToCalendar(title, description, start, end)
 		{
-			var resource = {
-				"summary": "Appointment",
-				"location": "Somewhere",
-				"start": {
-					"dateTime": "2017-11-16T10:00:00.000-07:00"
-				},
-				"end": {
-					"dateTime": "2017-11-16T10:25:00.000-07:00"
-				}
+			var event = {
+			  'summary': title,
+			  'description': description,
+			  'start': {
+				'dateTime': start, //'2017-11-25T09:00:00+01:00',
+				'timeZone': 'Europe/Rome'
+			  },
+			  'end': {
+				'dateTime': end, //'2017-11-25T010:00:00+01:00',
+				'timeZone': 'Europe/Rome'
+			  },
+			  
+			  'reminders': {
+				'useDefault': false,
+				'overrides': [
+				  {'method': 'popup', 'minutes': 10}
+				]
+			  }
 			};
+
 			var request = gapi.client.calendar.events.insert({
-				'calendarId': 'primary',
-				'resource': resource
+			  'calendarId': selectedCalendarJson.id,
+			  'resource': event
 			});
-			request.execute(function(resp) {
-				console.log(resp);
+
+			request.execute(function(event) {
+				if(event.status == "confirmed")
+				{
+					// Richiedo al server tutti gli eventi del calendario (cosi sono già ordinati per data)
+					setSelectedCalendar();
+				}
+				else {
+					alert("Errore durante il salvataggio dell'evento. Controlla i dati e riprova.");
+				}
+			   
 			});
+			
 		}
+		
+		function setEventInformation()
+		{			
+			var titolo = $("#titolo").val();
+			var descrizione = $("#descrizione").val();
+			var start = $("#eventDayStart").val() + "T" + $("#eventTimeStart").val() + ":00+01:00";
+			var end = $("#eventDayEnd").val() + "T" + $("#eventTimeEnd").val() + ":00+01:00";
+			
+			console.log(titolo + " " + descrizione + " " + start + " " + end + " " );
+
+			
+			addEventToCalendar(titolo, descrizione, start, end);
+		
+		}
+		
 		
 		// funzione che serve per quando clicco il button "eventi calendario", cosi passa alla funzione listaUpcomingEvents, i dati relativi al calendario selezionato
 		function setSelectedCalendar()
@@ -459,28 +529,19 @@
 			$("#btnEvents").prop('disabled', state);
 			$("#btnAddEvent").prop('disabled', state);
 		}
-	  
-    </script>
-	
-	<!-- Aggiunta evento al calendario NON VA 
-	<script>
-		function newEvent() {
-			// Refer to the JavaScript quickstart on how to setup the environment:
-			// https://developers.google.com/google-apps/calendar/quickstart/js
-			// Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
-			// stored credentials.
-
+		
+		/*function createEventGooglePROVA() {	
+			// CODICE Google che crea evento di prova
 			var event = {
 			  'summary': 'Google I/O 2015',
-			  'location': '800 Howard St., San Francisco, CA 94103',
 			  'description': 'A chance to hear more about Google\'s developer products.',
 			  'start': {
-				'dateTime': '2015-05-28T09:00:00-07:00',
-				'timeZone': 'America/Los_Angeles'
+				'dateTime': '2017-11-28T10:00:00+01:00',
+				'timeZone': 'Europe/Rome'
 			  },
 			  'end': {
-				'dateTime': '2015-05-28T17:00:00-07:00',
-				'timeZone': 'America/Los_Angeles'
+				'dateTime': '2017-11-28T11:00:00+01:00',
+				'timeZone': 'Europe/Rome'
 			  },
 			  'recurrence': [
 				'RRULE:FREQ=DAILY;COUNT=2'
@@ -492,8 +553,8 @@
 			  'reminders': {
 				'useDefault': false,
 				'overrides': [
-				  {'method': 'email', 'minutes': 24 * 60},
-				  {'method': 'popup', 'minutes': 10}
+					{'method': 'email', 'minutes': 24 * 60},
+				    {'method': 'popup', 'minutes': 10}
 				]
 			  }
 			};
@@ -507,8 +568,9 @@
 			  appendPre('Event created: ' + event.htmlLink);
 			});
 		}
-	</script> -->
-
+		*/
+	  
+    </script>
 	
 	<!-- caricamento delle api google per il login -->
 	<script async defer src="https://apis.google.com/js/api.js"
@@ -517,8 +579,9 @@
     </script>
 	
 	<script>
-		<!-- codice per la gestione del datapicker -->
-			$(document).ready(function(){
+		
+		$(document).ready(function(){
+			    /* codice per la gestione del datapicker per la ricerca eventi */
 				var date_input=$('input[name="selectedDate"]'); //our date input has the name "date"
 				date_input.datepicker({
 					format: 'yyyy-mm-dd',
@@ -529,8 +592,35 @@
 					$('.datepicker').hide();
 					listTodayEvents();
 				});
-			});
+				
+			/* date picker nella finestra modale usata per creare un nuovo evento*/
+				var date_input=$('input[name="eventDayEnd"]'); //our date input has the name "date"
+				date_input.datepicker({
+					format: 'yyyy-mm-dd',
+					todayHighlight: true,
+					autoclose: true,
+					//onClose: listTodayEvents // funzione che si attiva alla chiusura del datapicker
+				}).on('change', function(){
+					$('.datepicker').hide();
+				}); 
+				
+				var date_input=$('input[name="eventDayStart"]'); //our date input has the name "date"
+				date_input.datepicker({
+					format: 'yyyy-mm-dd',
+					todayHighlight: true,
+					autoclose: true,
+					//onClose: listTodayEvents // funzione che si attiva alla chiusura del datapicker
+				}).on('change', function(){
+					$('.datepicker').hide();
+				}); 
+				
+				
+				
+				
+		});
 			
+		
+		
 	</script>
 	
   </body>
