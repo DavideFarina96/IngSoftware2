@@ -14,7 +14,23 @@ body {
   background-color: white;
 }
 
+.button {
+  color: #fff;
+  background-color: #ccc;
+  font-size: inherit;
+  padding: .5em;
+  border: 0;
+  margin: 0;
+  border-radius: 3px;
+  text-overflow: '';
+  width: 100%;
+}
+
 /* Custom dropdown */
+.selection-class option{
+	width: 100%;
+}
+
 .dropdown-div {
     margin-left: 5%;
     margin-top: 1em;
@@ -53,6 +69,7 @@ body {
   border-radius: 3px;
   text-overflow: '';
   -webkit-appearance: button; /* hide default arrow in chrome OSX */
+  width: 100%;
 }
 
 .custom-dropdown::before,
@@ -336,6 +353,12 @@ a {
   opacity: 0;
 }
 
+.cd-schedule .event-other {
+  display: block;
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;	
+}
 .cd-schedule .event-name,
 .cd-schedule .event-date {
   display: block;
@@ -346,13 +369,11 @@ a {
 }
 
 .cd-schedule .event-name {
-  font-size: 2.4rem;
+  font-size: 2rem;
 }
 
-@media only screen and (min-width: 800px) {
-  .cd-schedule .event-name {
-    font-size: 2rem;
-  }
+.cd-schedule .event-other {
+  font-size: 1.5rem;
 }
 
 .cd-schedule .event-date {

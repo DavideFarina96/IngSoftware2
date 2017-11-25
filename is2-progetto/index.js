@@ -100,6 +100,29 @@ app.all('/orari_e_aule', function(request, response){
     response.sendfile('orari_e_aule.html');
 });
 
+app.all('/json', function(req, response, next){ 
+	var d = new Date();
+	var month = d.getMonth()+1;
+	var day = d.getDate();
+
+	var date = (day < 10 ? '0' : '') + day + '-' +
+		(month < 10 ? '0' : '') + month + '-' +
+		d.getFullYear();
+	
+	var url = 'https://easyroom.unitn.it/Orario/grid_call.php?form-type=corso&anno=2017&corso=' + req.query.corso + '&anno2=' + req.query.anno2 + '&date=' + date + '&_lang=it&all_events=0'; 
+	//var url = 'https://easyroom.unitn.it/Orario/grid_call.php?form-type=corso&anno=2017&corso=0514G&anno2=P0405%7C3&date=20-11-2017&_lang=en&all_events=0'; 
+    console.log(url);
+	
+	request({ 
+		url: url, 
+		json: true 
+	}, function (error, res, body) { 
+		if (!error && res.statusCode === 200) { 
+			response.json(body); 
+		} 
+	}) 
+});
+
 //bot-related paths
 app.all('/bot', function(req, res){
 	res.sendfile('bot.html');
