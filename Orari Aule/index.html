@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">
+	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+	<link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="style.css" type="text/css"/>
+ <!-- Resource style -->
+	<script src="js/jquery-3.2.1.min.js"></script>
+        <script src="data.js"></script>
+        <script src="ora.js"></script>
+	<!--<script src="js/getJson.js";-->
+  	
+	<title>Schedule</title>
+</head>
+<body>
+<div class="dropdown-div">
+<div class="title">Seleziona i dati per visualizzare le aule</div>
+	<ul>
+		<li>
+			<div><label>Sede:</label></div>
+			<span class="custom-dropdown big">
+				<select>    
+					<option>-</option>
+					<option>Dipartimenti-Povo</option>
+                                        <!--  <option>CLA-Centro Linguistico d'Ateneo</option>
+                                        <option>Dipartimenti-Povo</option>   
+                                        <option>Dipartimento di Economia e Management</option>
+                                        <option>Dipartimento di Lettere e Filosofia</option>
+                                        <option>Dipartimento di Psicologia e Scienze Cognitive</option>
+                                        <option>Dipartimento di Sociologia e Ricerca Sociale</option>
+                                        <option>Dipartimento di Ingegneria Civile Ambientale Meccanica</option>
+                                        <option>Facoltà di Giurisprudenza</option> -->
+				</select>
+			</span>
+		</li>
+		
+                <li>
+                        <form>
+                            <div><label>Data:</label></div>
+                             <input type=date id=e>
+                                    <script>
+                                        document.getElementById('e').value = new Date().toISOString().substring(0, 10);
+                                    </script>
+                                
+                        </form>
+                </li>
+                <li>
+                        <form> 
+                            <div><label>Ora:</label></div>
+                                    <input type="time" id=f>
+                                    <script>
+                                        document.getElementById('f').value = new Time().toISOString();
+                                    </script>
+                        </form>
+                </li>
+                <div><label><input type="submit" value="Invia"></label></div>
+	</ul>
+</div>
