@@ -22,17 +22,21 @@
         padding: 0;
       }
     </style>
-  </head>
-  <body onload="initMap()">
-		<div id="map"></div>
+			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc&libraries=places">
+			</script>
+	<script type="text/javascript" src="js/geolocation-marker.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script>
-		//dichiarazione mappa e finestra 
+		//dichiarazione mappa e finestra
+		var GeoMarker;
+		
 		var map, infoWindow;
 		var service ;
 		var pos;
+		var optn;
 		//funzione di inizializzazione richiamata col load della pagina
 		function initMap() {
+			
 			map = new google.maps.Map(document.getElementById('map'), {
 										mapTypeId: google.maps.MapTypeId.HYBRID,
 										//center: {lat: -34.397, lng: 150.644},
@@ -54,11 +58,30 @@
 						lng: 11.150152
 					};
 					pos = mypos;
+				 optn = {
+					enableHighAccuracy: true,
+					timeout: Infinity,
+					maximumAge: 0	
+				};
+				
+					GeoMarker = new GeolocationMarker();
+                    GeoMarker.setCircleOptions({fillColor: '#808080'});
+                    google.maps.event.addListenerOnce(GeoMarker, 'position_changed', function() {
+                      map.setCenter(this.getPosition());
+                    });
+                    google.maps.event.addListener(GeoMarker, 'geolocation_error', function(e) {
+                      alert('Problemi nel recuperare la posizione: ' + e.message);
+                    });
+                    GeoMarker.setMap(map);
+				
+					
+					
+					/*
 					infoWindow.setPosition(pos); //inserire la posizione attuale con pos, testpos per povo
 					infoWindow.setContent('You are here');
 					infoWindow.open(map);
 					map.setCenter(pos); //inserire la posizione attuale con pos, testpos per povo
-					
+					*/
 					//creo una richiesta per la posizione delle fermate
 						var request = {
 							location: pos, //inserire la posizione attuale con pos, testpos per povo
@@ -81,11 +104,32 @@
 			}
 			
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		//posiziona i marker in ingresso (in questo caso le fermate) e inserisce la descrizione (personalizzabile)
-		function createMarker(place, startLocation, endLocation, times) {
+		function createMarker(place, startLocation, endLocation, _times) {
 				
-				
-			if(place.name == times.stop){
+			console.log(place);
+			console.log(_times);
+			if(place.name == _times.stop){
 				var placeLoc = place.geometry.location;
 				//console.log(placeLoc);
 				var marker = new google.maps.Marker({
@@ -100,10 +144,10 @@
 				{
 					if (status == google.maps.places.PlacesServiceStatus.OK) 
 					{
-						more_content+="<strong><p>Prossimo bus alle: "+times.time+"</p>";
-						more_content+="<p>da: "+times.stop+"</p>";
-						more_content+="<p>linea: "+times.line+"</p>";
-						more_content+="<p>verso: "+times.destination+"</p>";
+						more_content+="<strong><p>Prossimo bus alle: "+_times.time+"</p>";
+						more_content+="<p>da: "+_times.stop+"</p>";
+						more_content+="<p>linea: "+_times.line+"</p>";
+						more_content+="<p>verso: "+_times.destination+"</p>";
 					}
 				});
 			
@@ -145,13 +189,13 @@
 		
 		
 		//dichiara un oggetto per salvare e restituire alla funzione padre i dati sul prossimo bus
-        var times = {time: "00.00", stop: "fermata", line: "0", destination:"_"};
+		var times = {time: "00.00", stop: "fermata", line: "0", destination:"_"};
 		//funzione che richiede alle api di maps indicazioni per raggiungere un posto in input
 		//e restituisce le informazioni sulla partenza del prossimo autobus dalla fermata più vicina
 		function CreateStopsWithDetails(startLocation, stopLocation, endLocation, result){
             
 			var strStart = stopLocation;
-			var url = "https://maps.googleapis.com/maps/api/directions/json?origin="+strStart+"&destination=Trento-Autostaz.&alternative=true&transit_mode=train|tram|bus&mode=transit&key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc";
+			var url = "https://maps.googleapis.com/maps/api/directions/json?origin="+strStart+"&destination="+endLocation+"&alternative=true&transit_mode=train|tram|bus&mode=transit&key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc";
 			
 			$.ajaxPrefilter( function (options) {
 			  if (options.crossDomain && jQuery.support.cors) {
@@ -165,8 +209,10 @@
 				crossOrigin: true,
 				url: url,
 				success: function(data) {
+					times = {time: "00.00", stop: "fermata", line: "0", destination:"_"};
+					console.log("RICHIESTA AJAX ESEGUITA CORRETTAMENTE");
 					times = handleDirections(data);
-					createMarker(result,pos, "Trento", times);
+					createMarker(result,pos, endLocation, times);
 				}
 			});
             
@@ -174,22 +220,22 @@
 		}
             
         function handleDirections(data){
-				//console.log(data);
-				for(var i = 0; i < data.routes.length; i++)
-				{
-						for(var j = 0; j<data.routes[i].legs[0].steps.length; j++){
-							if(data.routes[0].legs[0].steps[j].travel_mode == "TRANSIT"){
-								//console.log(data);
-								times.time = data.routes[0].legs[0].steps[j].transit_details.departure_time.text;
-								times.stop = data.routes[0].legs[0].steps[j].transit_details.departure_stop.name;
-								times.line = data.routes[0].legs[0].steps[j].transit_details.line.short_name;
-								times.destination = data.routes[0].legs[0].steps[j].transit_details.arrival_stop.name;
-                                return(times);
-							}
-					}
+			//console.log(data);
+			for(var i = 0; i < data.routes.length; i++)
+			{
+					for(var j = 0; j<data.routes[i].legs[0].steps.length; j++){
+						if(data.routes[0].legs[0].steps[j].travel_mode == "TRANSIT"){
+							//console.log(data);
+							times.time = data.routes[0].legs[0].steps[j].transit_details.departure_time.text;
+							times.stop = data.routes[0].legs[0].steps[j].transit_details.departure_stop.name;
+							times.line = data.routes[0].legs[0].steps[j].transit_details.line.short_name;
+							times.destination = data.routes[0].legs[0].steps[j].transit_details.arrival_stop.name;
+							return(times);
+						}
 				}
-				
 			}
+			
+		}
         function a(s){times = s;console.log(times);}
 		function StringifyCoordsFromLocation(pos){
 			if(pos.lat != null && pos.lng != null)
@@ -198,11 +244,16 @@
 				return "0,0";
 		}
 		</script>
+
+  </head>
+  <body onload="initMap()">
+		<div id="map"></div>
+		
 		<!-- libreria per la ricerca di luoghi speciali-->
 		
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc&libraries=places"
-		async defer></script>
+		
 		<div id="businfo">orari e linee TODO</div>
+		<button>Button</button>
 	</body>
 </html>
 <!-- ES completo: https://maps.googleapis.com/maps/api/directions/json?origin=LevicoTerme&destination=Trento&alternative=true&transit_mode=train|tram|bus&mode=transit&key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc&callback=initMap& -->
