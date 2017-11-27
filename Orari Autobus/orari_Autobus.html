@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Orari Autobus</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      /* valori da cambiare per la visualizzazione con webview
+	  * i dati sono di test per simulare lo schermo del cellulare*/
+	  #map {
+        height: 100%;
+		width: 100%;
+		top: 0%;
+		left: 0%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc&libraries=places">
+			</script>
+	<script type="text/javascript" src="js/geolocation-marker.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script>
+		//dichiarazione mappa e finestra
+		var GeoMarker;
+		
+		var map, infoWindow;
+		var service ;
+		var pos;
+		var optn;
+		//funzione di inizializzazione richiamata col load della pagina
+		function initMap() {
+			
+			map = new google.maps.Map(document.getElementById('map'), {
+										mapTypeId: google.maps.MapTypeId.HYBRID,
+										//center: {lat: -34.397, lng: 150.644},
+										zoom: 15
+									});
+			
+			
+			infoWindow = new google.maps.InfoWindow;
+			
+			//richiede la posizione al browser
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position) {
+					var mypos = {
+						lat: position.coords.latitude,
+						lng: position.coords.longitude
+					};
+					var disipos = {
+						lat: 46.066910,
+						lng: 11.150152
+					};
+					pos = mypos;
+				 optn = {
+					enableHighAccuracy: true,
+					timeout: Infinity,
+					maximumAge: 0	
+				};
+				
+					GeoMarker = new GeolocationMarker();
+                    GeoMarker.setCircleOptions({fillColor: '#808080'});
+                    google.maps.event.addListenerOnce(GeoMarker, 'position_changed', function() {
+                      map.setCenter(this.getPosition());
+                    });
+                    google.maps.event.addListener(GeoMarker, 'geolocation_error', function(e) {
+                      alert('Problemi nel recuperare la posizione: ' + e.message);
+                    });
+                    GeoMarker.setMap(map);
+				
+					
+					
+					/*
+					infoWindow.setPosition(pos); //inserire la posizione attuale con pos, testpos per povo
+					infoWindow.setContent('You are here');
+					infoWindow.open(map);
+					map.setCenter(pos); //inserire la posizione attuale con pos, testpos per povo
+					*/
+					//creo una richiesta per la posizione delle fermate
+						var request = {
+							location: pos, //inserire la posizione attuale con pos, testpos per povo
+							radius: 500,
+							types: ['train_station','bus_station','subway_station','transit_station']
+						};
+					service = new google.maps.places.PlacesService(map);
+					//eseguo la richiesta asincrona(?)
+					service.search(request, callback);
+					
+					//alert("Lat,Long: " + pos.lat + "," + pos.lng);
+				}, function() {
+					handleLocationError(true, infoWindow, map.getCenter());
+				});
+				
+			}
+			else {
+				// Browser doesn't support Geolocation
+				handleLocationError(false, infoWindow, map.getCenter());
+			}
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//posiziona i marker in ingresso (in questo caso le fermate) e inserisce la descrizione (personalizzabile)
+		function createMarker(place, startLocation, endLocation, _times) {
+				
+			console.log(place);
+			console.log(_times);
+			if(place.name == _times.stop){
+				var placeLoc = place.geometry.location;
+				//console.log(placeLoc);
+				var marker = new google.maps.Marker({
+				  map: map,
+				  position: place.geometry.location
+				});
+				var content='<strong style="font-size:1.2em">'+place.name+'</strong>';
+				var more_content='<div>________________</div>';
+				
+				//make a request for further details
+                service.getDetails({reference:place.reference}, function (place, status) 
+				{
+					if (status == google.maps.places.PlacesServiceStatus.OK) 
+					{
+						more_content+="<strong><p>Prossimo bus alle: "+_times.time+"</p>";
+						more_content+="<p>da: "+_times.stop+"</p>";
+						more_content+="<p>linea: "+_times.line+"</p>";
+						more_content+="<p>verso: "+_times.destination+"</p>";
+					}
+				});
+			
+				google.maps.event.addListener(marker, 'click', function() {
+					infoWindow.setContent(content+more_content);
+					infoWindow.open(map, this);
+				});
+			}
+			else
+					more_content+="<p>nessun bus</p>";
+		}
+		
+		//quando riceve la risposta (le fermate) chiama la funzione che trova i bus (con relativi dettagli)
+		function callback(results, status){
+			if(status == google.maps.places.PlacesServiceStatus.OK){
+				var fermate = new Array();
+				for (var i = 0; i<results.length; i++){
+					if(fermate.indexOf(results[i].name) == -1){
+						
+						fermate.push(results[i].name);
+                    //richiamare la funzione che cerca orari alla fermata.
+						CreateStopsWithDetails(StringifyCoordsFromLocation(pos),
+										results[i].geometry.location.lat()+","+results[i].geometry.location.lng(),
+										"trento", results[i]);
+						//aggiungere orari da qualche parte
+						//console.log(timetable);
+					}
+				}
+			}
+		}
+		//messaggio di errore se non trova la posizione
+		function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+			infoWindow.setPosition(pos);
+			infoWindow.setContent(browserHasGeolocation ?
+								  'Error: The Geolocation service failed.' :
+								  'Error: Your browser doesn\'t support geolocation.');
+			infoWindow.open(map);
+		}
+		
+		
+		//dichiara un oggetto per salvare e restituire alla funzione padre i dati sul prossimo bus
+		var times = {time: "00.00", stop: "fermata", line: "0", destination:"_"};
+		//funzione che richiede alle api di maps indicazioni per raggiungere un posto in input
+		//e restituisce le informazioni sulla partenza del prossimo autobus dalla fermata più vicina
+		function CreateStopsWithDetails(startLocation, stopLocation, endLocation, result){
+            
+			var strStart = stopLocation;
+			var url = "https://maps.googleapis.com/maps/api/directions/json?origin="+strStart+"&destination="+endLocation+"&alternative=true&transit_mode=train|tram|bus&mode=transit&key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc";
+			
+			$.ajaxPrefilter( function (options) {
+			  if (options.crossDomain && jQuery.support.cors) {
+				var http = (window.location.protocol === 'http:' ? 'http:' : 'https:');
+				options.url = http + '//cors-anywhere.herokuapp.com/' + options.url;
+			  }
+			});
+			var data;
+            //console.log(result);
+			$.ajax({
+				crossOrigin: true,
+				url: url,
+				success: function(data) {
+					times = {time: "00.00", stop: "fermata", line: "0", destination:"_"};
+					console.log("RICHIESTA AJAX ESEGUITA CORRETTAMENTE");
+					times = handleDirections(data);
+					createMarker(result,pos, endLocation, times);
+				}
+			});
+            
+			
+		}
+            
+        function handleDirections(data){
+			//console.log(data);
+			for(var i = 0; i < data.routes.length; i++)
+			{
+					for(var j = 0; j<data.routes[i].legs[0].steps.length; j++){
+						if(data.routes[0].legs[0].steps[j].travel_mode == "TRANSIT"){
+							//console.log(data);
+							times.time = data.routes[0].legs[0].steps[j].transit_details.departure_time.text;
+							times.stop = data.routes[0].legs[0].steps[j].transit_details.departure_stop.name;
+							times.line = data.routes[0].legs[0].steps[j].transit_details.line.short_name;
+							times.destination = data.routes[0].legs[0].steps[j].transit_details.arrival_stop.name;
+							return(times);
+						}
+				}
+			}
+			
+		}
+        function a(s){times = s;console.log(times);}
+		function StringifyCoordsFromLocation(pos){
+			if(pos.lat != null && pos.lng != null)
+				return pos.lat+","+pos.lng;
+			else
+				return "0,0";
+		}
+		</script>
+
+  </head>
+  <body onload="initMap()">
+		<div id="map"></div>
+		
+		<!-- libreria per la ricerca di luoghi speciali-->
+		
+		
+		<div id="businfo">orari e linee TODO</div>
+		<button>Button</button>
+	</body>
+</html>
+<!-- ES completo: https://maps.googleapis.com/maps/api/directions/json?origin=LevicoTerme&destination=Trento&alternative=true&transit_mode=train|tram|bus&mode=transit&key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc&callback=initMap& -->
