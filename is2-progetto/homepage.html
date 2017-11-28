@@ -158,10 +158,9 @@
             </div>
 			
 			<footer class="footer footerStyle">
-				<div class="input-group">
-				    <input type="text" class="form-control" id="txtInputValue" placeholder="Cosa stai cercando?" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+				<div id="groupPopover" class="input-group"  data-container="body" data-toggle="popover" data-placement="top" data-content="Attendi">
+				    <input type="text" class="form-control" id="txtInputValue" placeholder="Cosa stai cercando?">
 					<span class="input-group-btn">
-						<button class="btn btn-default" id="btnInputVocale"><i class="fa fa-microphone"></i></button>
 						<button class="btn btn-default" id="btnSend" onclick="sendToBot()"><span class="glyphicon glyphicon-send"></span></a>
 					</span>
 				</div>
@@ -214,8 +213,8 @@
                 $.ajax({
                     url: url,
                     success: function(data) {
-                        $('#txtInputValue').attr("data-content", data.displayText);
-                        $('#txtInputValue').popover('show');
+                        $('#groupPopover').attr("data-content", data.displayText);
+                        $('#groupPopover').popover('show');
                     }
                 });
 			}
