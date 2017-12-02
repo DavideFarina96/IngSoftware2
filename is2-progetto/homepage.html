@@ -51,6 +51,10 @@
 			{
 				height: 8vh;
 			}
+
+            .popover{
+                max-width: 90%; /* Max Width of the popover (depending on the container!) */
+            }
 		</style>
     </head>
     <body>
@@ -154,10 +158,9 @@
             </div>
 			
 			<footer class="footer footerStyle">
-				<div class="input-group">
+				<div id="groupPopover" class="input-group"  data-container="body" data-toggle="popover" data-placement="top" data-content="Attendi">
 				    <input type="text" class="form-control" id="txtInputValue" placeholder="Cosa stai cercando?">
 					<span class="input-group-btn">
-						<button class="btn btn-default" id="btnInputVocale"><i class="fa fa-microphone"></i></button>
 						<button class="btn btn-default" id="btnSend" onclick="sendToBot()"><span class="glyphicon glyphicon-send"></span></a>
 					</span>
 				</div>
@@ -197,7 +200,23 @@
 			// quando viene cliccato il button "Invia" viene chiamata la pagina "bot" e gli viene passato il testo inserito dall'utente
 			function sendToBot()
 			{
-				window.location = "/bot?v=" + $("#txtInputValue").val();
+                $('[data-toggle="popover"]').popover();
+
+				//window.location = "/bot?v=" + $("#txtInputValue").val();
+                var msg = $("#txtInputValue").val();
+
+                //var url = "https://is2-progetto.herokuapp.com/bot_message?msg=" + msg;
+                var url = "http://127.0.0.1:8080/bot_message?msg=" + msg; //PER TEST LOCALE
+
+                var data;
+                //console.log(result);
+                $.ajax({
+                    url: url,
+                    success: function(data) {
+                        $('#groupPopover').attr("data-content", data.displayText);
+                        $('#groupPopover').popover('show');
+                    }
+                });
 			}
         </script>
     </body>

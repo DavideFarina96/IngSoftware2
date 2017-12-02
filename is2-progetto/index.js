@@ -128,30 +128,12 @@ app.all('/bot', function(req, res){
 	res.sendfile('bot.html');
 });
 
-app.all('/bot_content', function(req, response){
-	/*var msg = req.query.msg;
-	var myUrl = "https://api.dialogflow.com/v1/query?v=20150910&contexts=shop&lang=it&query="+ msg +"&sessionId=12345&timezone=Italy/Rome";
-	request({	url: myUrl,  
-			method: "GET",  
-			json: true,
-			headers: {
-					'Authorization': "Bearer 1b94791a77af4cafa8a96f45476d7907"
-				} }, function(error, res, body) {
-				var msgResp = body.result.fulfillment.displayText
-				var msgResp = CreateBotResponse(msgResp);
-
-				response.set('Content-Type', 'application/json');	
-				response.send(msgResp);
-		
-	});*/
-});
-
 app.all('/bot_message', function(req, res) {
 	res.set('Content-Type', 'application/json');
 	var numeroBus, citta;
 	var myBody = req.body;
 	
-	console.log(myBody);
+	console.log("SKRR");
 
 	//se arrivo dalla home e non dal bot, faccio la richiesta per avere l'oggetto generalmente creato dal bot.
 	if(myBody.result == null)
@@ -169,6 +151,7 @@ app.all('/bot_message', function(req, res) {
 					myBody = body;
 					numeroBus = myBody.result.parameters.busNumber;
 					citta = myBody.result.parameters.location;
+
 					var finalMsg = ContinueRequest(numeroBus, citta, res);		
 				}
 				else
@@ -177,9 +160,11 @@ app.all('/bot_message', function(req, res) {
 	}
 	else 
 	{
-		numeroBus = myBody.result.parameters.busNumber;
+		/*numeroBus = myBody.result.parameters.busNumber;
 		citta = myBody.result.parameters.location;
-		var finalMsg = ContinueRequest(numeroBus, citta, res);	
+
+
+		var finalMsg = ContinueRequest(numeroBus, citta, res);	*/
 	}
 	
 });
@@ -208,6 +193,20 @@ function handleDirections(data){
 
 
 function ContinueRequest(numeroBus, citta, res) {
+	if(citta == null || citta == "")
+	{	
+		res.send(CreateBotResponse("Per favore dammi sia il numero del bus che il luogo in cui andare"));
+		return;
+	}
+	//riformatto le città per comodità dell'utente
+	citta = citta.toLowerCase();
+	if(citta.indexOf("trento") >= 0)
+		citta = "Trento-Autostaz";
+	if(citta.indexOf("mesiano") >= 0)
+		citta = 'Mesiano Fac. Ingegneria';
+	if(citta.indexOf("povo") >= 0)
+		citta = 'Povo Fac. Scienze';
+
 	var myUrl = "https://maps.googleapis.com/maps/api/directions/json?origin=Povo&destination=" + citta + "&alternative=true&transit_mode=train|tram|bus&mode=transit&key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc";
 	var times = "qualcosa";
 
@@ -224,12 +223,12 @@ function ContinueRequest(numeroBus, citta, res) {
 							// -1 = no bus.		
 							if(times != "-1")
 							{	
-								//Aggiungere controllo bus
 								if(numeroBus == times.line)
 									msg = "Il prossimo " + times.line + " per " + citta + " è alle " + times.time + ".";
-								else
+								else if(numeroBus > 0)
 									msg = "Non c'è il " + numeroBus + ", ma puoi prendere il " + times.line + " alle " + times.time + ".";									
-								
+								else
+									msg = "Per andare a " + citta + " puoi prendere il " + times.line + " alle " + times.time + ".";
 							}						
 							else
 								msg = "Non c'è un autobus per " + citta + ".";						
@@ -237,7 +236,7 @@ function ContinueRequest(numeroBus, citta, res) {
 						}
 						else
 						{ 
-							res.send(CreateBotResponse("errore"));
+							res.send(CreateBotResponse("Errore: " + response.statusCode));
 						}
 		});
 }
