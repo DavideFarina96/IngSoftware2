@@ -95,12 +95,17 @@ app.all('/calendar', function(request, response){
 
 
 
-// orari lezione e disponibilità delle varie aule
-app.all('/orari_e_aule', function(request, response){
-    response.sendfile('orari_e_aule.html');
+// orari lezione
+app.all('/orari_corsi', function(request, response){
+    response.sendfile('orari_corsi.html');
 });
 
-app.all('/json', function(req, response, next){ 
+// disponibilità delle varie aule
+app.all('/aule_libere', function(request, response){
+    response.sendfile('aule_libere.html');
+});
+
+app.all('/orari', function(req, response, next){ 
 	var d = new Date();
 	var month = d.getMonth()+1;
 	var day = d.getDate();
@@ -121,6 +126,27 @@ app.all('/json', function(req, response, next){
 			response.json(body); 
 		} 
 	}) 
+});
+
+app.all('/aule', function(req, response, next){
+	var d = new Date();
+	var month = d.getMonth()+1;
+	var day = d.getDate();
+
+	var date = (day < 10 ? '0' : '') + day + '-' +
+		(month < 10 ? '0' : '') + month + '-' +
+		d.getFullYear();
+		
+	var url = 'https://easyroom.unitn.it/Orario/rooms_call.php?form-type=rooms&sede=E0503&date=' + date + '&_lang=it'; 
+	
+	request({ 
+		url: url, 
+		json: true 
+	}, function (error, res, body) { 
+		if (!error && res.statusCode === 200) { 
+			response.json(body); 
+		} 
+	})
 });
 
 //bot-related paths

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery.timepicker.js"></script>
+	<link rel="stylesheet" href="css/jquery.timepicker.css" />
+	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+  	<script type="text/javascript">
+		var json_data = null;
+			
+		function retrieveJson() {
+			$.ajax({
+				url: '/aule',
+				complete: function(data) {
+					json_data = data.responseJSON;
+					console.log(json_data);
+					parseJson();
+				}	 
+			});
+		}
+		
+		function parseJson() {
+			var aule = json_data.order;
+			console.log(aule);
+			
+			var eventi = json_data.events;
+			console.log(eventi);
+		}
+		
+		function mostraAule(){
+			// TODO
+		}
+		
+		$(function() {
+			$('#setTimeExample').timepicker();
+						
+			$('#setTimeButton').on('click', function() {
+				$('#setTimeExample').timepicker('setTime', new Date());
+			});
+		});
+	</script>
+ 
+	<title>Aule</title>
+</head>
+<body onload="retrieveJson()">
+	<nav class="navbar navbar-default"> 
+        <div class="container-fluid">
+			<div class="navbar-header col-xs-12">
+				<ul class="nav navbar-nav navbar-left col-xs-5 col-sm-3">
+                     <li><a href="/"><span class="glyphicon glyphicon-arrow-left"></span> Home</a></li>
+                </ul>
+				<ul class="nav navbar-nav col-xs-5 col-sm-5">
+                    <li align="center"><a href="/">DISIer</a></li>
+                </ul>
+				
+            </div>
+        </div>
+    </nav> 
+
+
+<div class="dropdown-div">
+<div class="title">Scegli l'orario in cui vuoi visualizzare quali aule sono libere</div>
+	<ul>		
+		<li>
+			<label>Dalle ore:</label>
+			<input id="setTimeExample" type="text" class="time" />
+			<button class="button" id="setTimeButton">Imposta ora corrente</button>
+		</li>		
+		<li>
+		<br>
+			<button class="button" onclick="mostraAule()">Mostra</button>
+		</li>
+	</ul>
+</div>
+</br>
+<div class="cd-schedule loading">
+	<div class="events">
+		<ul>
+			<li class="events-group" id="1">
+				<div class="top-info"><span id="1-day">lunedì</span></div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="event-modal">
+		<header class="header">
+			<div class="content">
+				<span class="event-date"></span>
+				<h3 class="event-name"></h3>
+			</div>
+
+			<div class="header-bg"></div>
+		</header>
+
+		<div class="body">
+			<div class="event-info"></div>
+			<div class="body-bg"></div>
+		</div>
+
+		<a href="#0" class="close">Close</a>
+	</div>
+
+	<div class="cover-layer"></div>
+</div> <!-- .cd-schedule -->
+<script src="js/modernizr.js"></script>
+<script>
+	if( !window.jQuery ) document.write('<script src="js/jquery-3.0.0.min.js"><\/script>');
+</script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+	<script src="js/view_schedule.js"></script>
+	<script src="js/selezione_corsi.js"></script>
+	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+  	<script type="text/javascript">
+		var json_data = null;
+			
+		function retrieveJson(){
+			var corso = $('#corso-selection').val();
+			var anno2 = $('#anno-selection').val();
+			
+			if(corso == 'no-selection' || anno2 == "no-selection"){
+				alert("Seleziona sia corso che anno!");
+			} else {
+				$.ajax({
+					url: '/orari?corso=' + corso + '&anno2=' + anno2,
+					complete: function(data) {
+						json_data = data.responseJSON;
+						console.log(json_data);
+						parseJson();
+					}	 
+				});
+			}
+		}
+		
+		function parseJson() {
+			var celle = json_data.celle;
+			console.log(celle);
+			var giorno = null;
+						
+			for(i = 1; i < 6; i++){
+				$('#' + i + "-list").html("");
+			}
+						
+			for(i = 1; i < 6; i++){
+				$('#' + i + "-day").html(json_data.giorni[i-1].label);				
+			}
+			
+			for(i = 0; i < celle.length; i++){
+				giorno = celle[i].giorno;
+				$('#' + giorno + "-list").append(
+					'<li class="single-event" data-start="' + celle[i].ora_inizio + '" data-end="' + celle[i].ora_fine + ' "data-event="event-1">' + 
+						'<a href="#0">' +
+							'<em class="event-name">' + celle[i].titolo_lezione + '</em>' +
+							'<em class="event-other">' + celle[i].docente + '</em>' +
+							'<em class="event-other">' + celle[i].aula + '</em>' +
+						'</a>' +
+					'</li>'
+				);
+			}
+			
+			viewSchedule();
+		}
+	</script>
+ 
+	<title>Schedule</title>
+</head>
+<body>
+	<nav class="navbar navbar-default"> 
+        <div class="container-fluid">
+			<div class="navbar-header col-xs-12">
+				<ul class="nav navbar-nav navbar-left col-xs-5 col-sm-3">
+                     <li><a href="/"><span class="glyphicon glyphicon-arrow-left"></span> Home</a></li>
+                </ul>
+				<ul class="nav navbar-nav col-xs-5 col-sm-5">
+                    <li align="center"><a href="/">DISIer</a></li>
+                </ul>
+				
+            </div>
+        </div>
+    </nav> 
+
+
+<div class="dropdown-div">
+<div class="title">Seleziona il percorso di studi per visualizzare il calendario delle lezioni</div>
+	<ul>		
+		<li>
+			<div><label>Corso:</label></div>
+			<span class="custom-dropdown big">
+			<div>
+				<select id="corso-selection">    
+					<option value="no-selection">-</option>
+					<option value="0521H">Biologia quantitativa e computazionale (magistrale)</option>
+					<option value="0517H">Informatica (magistrale)</option>
+					<option value="0514G">Informatica (triennale)</option>
+					<option value="0340H">Ingegneria dell'informazione e delle comunicazioni (magistrale)</option>
+					<option value="0338G">Ingegneria dell'informazione e delle comunicazioni (triennale)</option>
+					<option value="0330G">Ingegneria dell'informazione e organizzazione d'impresa (triennale)</option>
+				</select>
+				</div>
+			</span>
+		</li>		
+		
+		<li>
+			<div><label>Anno:</label></div>
+			<span class="custom-dropdown big">
+				<select id="anno-selection">
+					<option value="no-selection">-</option>
+				</select>
+			</span>
+		</li>
+		
+		<li>
+		<br>
+			<button class="button" onclick="retrieveJson()">Mostra</button>
+		</li>
+	</ul>
+</div>
+</br>
+<div class="cd-schedule loading">
+	<div class="timeline">
+		<ul>
+			<li><span>09:00</span></li>
+			<li><span>09:30</span></li>
+			<li><span>10:00</span></li>
+			<li><span>10:30</span></li>
+			<li><span>11:00</span></li>
+			<li><span>11:30</span></li>
+			<li><span>12:00</span></li>
+			<li><span>12:30</span></li>
+			<li><span>13:00</span></li>
+			<li><span>13:30</span></li>
+			<li><span>14:00</span></li>
+			<li><span>14:30</span></li>
+			<li><span>15:00</span></li>
+			<li><span>15:30</span></li>
+			<li><span>16:00</span></li>
+			<li><span>16:30</span></li>
+			<li><span>17:00</span></li>
+			<li><span>17:30</span></li>
+			<li><span>18:00</span></li>
+		</ul>
+	</div> <!-- .timeline -->
+
+	<div class="events">
+		<ul>
+			<li class="events-group" id="1">
+				<div class="top-info"><span id="1-day">lunedì</span></div>
+				<ul id="1-list">
+				</ul>
+			</li>
+
+			<li class="events-group" id="2">
+				<div class="top-info"><span id="2-day">martedì</span></div>
+				<ul id="2-list">
+				</ul>
+			</li>
+
+			<li class="events-group" id="3">
+				<div class="top-info"><span id="3-day">mercoledì</span></div>
+
+				<ul id="3-list">
+				</ul>
+			</li>
+
+			<li class="events-group" id="4">
+				<div class="top-info"><span id="4-day">giovedì</span></div>
+
+				<ul id="4-list">
+				</ul>
+			</li>
+
+			<li class="events-group" id="5">
+				<div class="top-info"><span id="5-day">venerdì</span></div>
+
+				<ul id="5-list">
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<div class="event-modal">
+		<header class="header">
+			<div class="content">
+				<span class="event-date"></span>
+				<h3 class="event-name"></h3>
+			</div>
+
+			<div class="header-bg"></div>
+		</header>
+
+		<div class="body">
+			<div class="event-info"></div>
+			<div class="body-bg"></div>
+		</div>
+
+		<a href="#0" class="close">Close</a>
+	</div>
+
+	<div class="cover-layer"></div>
+</div> <!-- .cd-schedule -->
+<script src="js/modernizr.js"></script>
+<script>
+	if( !window.jQuery ) document.write('<script src="js/jquery-3.0.0.min.js"><\/script>');
+</script>
+</body>
+</html>
