@@ -121,9 +121,9 @@ app.all('/orari', function(req, response, next){
 	request({ 
 		url: url, 
 		json: true 
-	}, function (error, res, body) { 
+	}, function (error, res, jsonOrari) { 
 		if (!error && res.statusCode === 200) { 
-			response.json(body); 
+			response.json(jsonOrari); 
 		} 
 	}) 
 });
@@ -142,9 +142,9 @@ app.all('/aule', function(req, response, next){
 	request({ 
 		url: url, 
 		json: true 
-	}, function (error, res, body) { 
+	}, function (error, res, jsonAule) { 
 		if (!error && res.statusCode === 200) { 
-			response.json(body); 
+			response.json(jsonAule); 
 		} 
 	})
 });
