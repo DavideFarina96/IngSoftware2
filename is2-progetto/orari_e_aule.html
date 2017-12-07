@@ -23,7 +23,7 @@
 				alert("Seleziona sia corso che anno!");
 			} else {
 				$.ajax({
-					url: '/orari?corso=' + corso + '&anno2=' + anno2,
+					url: '/json?corso=' + corso + '&anno2=' + anno2,
 					complete: function(data) {
 						json_data = data.responseJSON;
 						console.log(json_data);

@@ -49,7 +49,7 @@
 			/* stile della navbar */
 			.navbarStyle
 			{
-				height: 8vh;
+				height: 5vh;
 			}
 
             .popover{
@@ -77,22 +77,19 @@
                     </li>
                     
                     <li>
-                        <a href="/orari_e_aule">Orari e aule</a>
+                        <a href="/orari_corsi">Orari e aule</a>
                     </li>
                     <li>
-                        <a href="/orari_Autobus">Orari Trasporti</a>
+                        <a href="/orari_Autobus_s">Orari Trasporti</a>
                     </li>
 					<li>
-                        <a href="/calendar">Calendario</a>
+                        <a href="/calendar_s">Calendario</a>
                     </li>
 					<li>
                         <a href="/bot">Bot</a>
                     </li>
                 </ul>
 
-                <ul class="list-unstyled CTAs hidden-sm hidden-md hidden-lg">
-                    <li><a href="#" class="sidebarButton"><span class="glyphicon glyphicon-cog"></span> Impostazioni</a> </li>
-                </ul>
             </nav>
 
 			<!-- Navbar page -->
@@ -108,9 +105,6 @@
 						<ul class="nav navbar-nav col-xs-8 col-sm-8">
                             <li align="center"><a href="/">DISIer</a></li>
                         </ul>
-						<ul class="nav navbar-nav navbar-right hidden-xs col-sm-3">
-                            <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Impostazioni</a></li>
-                        </ul>
                     </div>
                 </div>
             </nav>
@@ -122,16 +116,16 @@
 				
 
 				<div class="container-fluid" >
-					<div class="row" style="margin-top: 8vh">
+					<div class="row" style="margin-top: 5vh">
 						<!-- pagina con accoppiamenti di colori: https://coolors.co/browser/latest/3 -->
-						<div class="col-xs-6 alignContainer" style="background-color: #1D83A3; height: 42vh;"> <!-- 0091EA -->
-							<a href="/orari_e_aule" class="alignContent" >
+						<div class="col-xs-6 alignContainer" style="background-color: #1D83A3; height: 45vh;"> <!-- 0091EA -->
+							<a href="/orari_corsi" class="alignContent" >
 								<img class="imgResize" src="images/orari_e_aule-white.png" />
 								<p style="color: white; ">Orari e aule</p>
 							</a>
 						</div>
-						<div class="col-xs-6 alignContainer" style="background-color: #D62C26; height: 42vh; "> <!-- 388E3C -->
-                                <a href="/orari_Autobus" class="alignContent" >
+						<div class="col-xs-6 alignContainer" style="background-color: #D62C26; height: 45vh; "> <!-- 388E3C -->
+                                <a href="/orari_Autobus_s" class="alignContent" >
                                     <img class="imgResize" src="images/bus-stop-white.png" />
                                     <p style="color: white; ">Orari  Trasporti</p> 
                                 </a>
@@ -139,7 +133,7 @@
 					</div>
 					<div class="row">
 						<div class="col-xs-6 alignContainer" style="background-color: #F7AA1B; height: 45vh"> <!-- E65100 -->
-							<a href="/calendar" class="alignContent" >
+							<a href="/calendar_s" class="alignContent" >
 								<img class="imgResize" src="images/calendar-white.png" />
 								<p style="color: white; ">Il tuo calendario</p> 
 							</a>
@@ -205,9 +199,15 @@
 				//window.location = "/bot?v=" + $("#txtInputValue").val();
                 var msg = $("#txtInputValue").val();
 
-                //var url = "https://is2-progetto.herokuapp.com/bot_message?msg=" + msg;
-                var url = "http://127.0.0.1:8080/bot_message?msg=" + msg; //PER TEST LOCALE
-
+                var url = "https://is2-progetto.herokuapp.com/bot_message?msg=" + msg;
+                //var url = "http://127.0.0.1:8080/bot_message?msg=" + msg; //PER TEST LOCALE
+		
+		$.ajaxPrefilter( function (options) {
+		  if (options.crossDomain && jQuery.support.cors) {
+			var http = (window.location.protocol === 'http:' ? 'http:' : 'https:');
+			options.url = http + '//cors-anywhere.herokuapp.com/' + options.url;
+		  }
+		});
                 var data;
                 //console.log(result);
                 $.ajax({

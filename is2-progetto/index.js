@@ -74,21 +74,21 @@ app.all('/posizione_dinamica', function(request, response){
 
 
 // quando l'utente entra nella pagina con la mappa autobus, viene reindirizzato alla stessa pagina ma in versione https (perchè in http la localizzazione non va)
-app.all('/orari_Autobus', function(request, response){
-    response.redirect('https://is2-progetto.herokuapp.com/orari_Autobus_s');
-});
 app.all('/orari_Autobus_s', function(request, response){
+    response.redirect('https://is2-progetto.herokuapp.com/orari_Autobus');
+});
+app.all('/orari_Autobus', function(request, response){
     response.sendfile('orari_Autobus.html');
 });
 //****************************** fine google maps
 
 
 // pagina google calendar per visualizzare gli impegni dell'utente
-app.all('/calendar_s', function(request, response){
-	response.sendfile('quickstart.html');
-});
 app.all('/calendar', function(request, response){
-    response.redirect('https://is2-progetto.herokuapp.com/calendar_s');
+	response.sendfile('calendario_google.html');
+});
+app.all('/calendar_s', function(request, response){
+    response.redirect('https://is2-progetto.herokuapp.com/calendar');
 });
 //****************************** fine google calendar
 
@@ -121,9 +121,9 @@ app.all('/orari', function(req, response, next){
 	request({ 
 		url: url, 
 		json: true 
-	}, function (error, res, jsonOrari) { 
+	}, function (error, res, body) { 
 		if (!error && res.statusCode === 200) { 
-			response.json(jsonOrari); 
+			response.json(body); 
 		} 
 	}) 
 });
@@ -142,9 +142,9 @@ app.all('/aule', function(req, response, next){
 	request({ 
 		url: url, 
 		json: true 
-	}, function (error, res, jsonAule) { 
+	}, function (error, res, body) { 
 		if (!error && res.statusCode === 200) { 
-			response.json(jsonAule); 
+			response.json(body); 
 		} 
 	})
 });
@@ -307,3 +307,5 @@ app.listen(port);
 
 //check status
 //console.log('Server running at http://localhost:' + port);
+
+module.exports.CreateBotResponse = CreateBotResponse;
