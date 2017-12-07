@@ -1,116 +1,204 @@
 <!doctype html>
 <html lang="en" class="no-js">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-	<script type="text/javascript" src="js/jquery.timepicker.js"></script>
-	<link rel="stylesheet" href="css/jquery.timepicker.css" />
-	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
-	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
-  	<script type="text/javascript">
-		var json_data = null;
-			
-		function retrieveJson() {
-			$.ajax({
-				url: '/aule',
-				complete: function(data) {
-					json_data = data.responseJSON;
-					console.log(json_data);
-					parseJson();
-				}	 
-			});
-		}
-		
-		function parseJson() {
-			var aule = json_data.order;
-			console.log(aule);
-			
-			var eventi = json_data.events;
-			console.log(eventi);
-		}
-		
-		function mostraAule(){
-			// TODO
-		}
-		
-		$(function() {
-			$('#setTimeExample').timepicker();
-						
-			$('#setTimeButton').on('click', function() {
-				$('#setTimeExample').timepicker('setTime', new Date());
-			});
-		});
-	</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
  
-	<title>Aule</title>
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+  <script type="text/javascript" src="js/jquery.timepicker.js"></script>
+  <link rel="stylesheet" href="css/jquery.timepicker.css" />
+  <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+  <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+    <script type="text/javascript">
+    var json_data = null;
+    var aule;
+    var eventi;
+      
+    function retrieveJson() {
+      $.ajax({
+        url: '/aule',
+        complete: function(data) {
+          json_data = data.responseJSON;
+          console.log(json_data);
+          parseJson();
+        }   
+      });
+    }
+    
+    function initListaAule(){
+      $("#events-list").html("");
+      
+      for(i = 0; i < aule.length; i++){
+        var aula = aule[i].split("/")[1];
+        
+        if (aula.indexOf('.') > -1){
+          aula = aula.replace('.','');
+        } else if (aula.indexOf(' ') > -1){
+          aula = aula.replace(' ','-');
+        }        
+      
+        $("#events-list").append(
+          '<li class="events-group" id="aula-' + aula + '" data-marked="false">' +
+          '<div class="top-info">' + aula + " " + '<span id="ora-' + aula + '"></span></div>' +
+          '</li>'
+        );
+      }
+    }
+    
+    function parseJson() {
+      aule = json_data.order;
+      console.log(aule);
+      
+      eventi = json_data.events;
+      console.log(eventi);
+      
+      $("#events-list").append(
+        '<li class="events-group">' +
+        '<div class="top-info">Selezionare un orario...</span></div>' +
+        '</li>'
+      );
+    }
+    
+    function mostraAule(){  
+      initListaAule();
+    
+      if($("#setTime").val() != ""){
+        var time_string = $("#setTime").val();
+        var time_final = time_string + ":00";
+        
+        for(i = 0; i < eventi.length; i++){        
+          var aula = eventi[i].CodiceAula.split("/")[1];
+          
+          if (aula.indexOf('.') > -1){
+            aula = aula.replace('.','');
+          } else if (aula.indexOf(' ') > -1){
+            aula = aula.replace(' ','-');
+          }    
+          
+          if(eventi[i].to > time_final){        
+            if(eventi[i].from > time_final){
+              if(document.getElementById("aula-" + aula).getAttribute("data-marked") == "false"){
+                var ora = eventi[i].from.split(":")[0] + ":" + eventi[i].from.split(":")[1];
+                $("#ora-" + aula).html(" libera fino alle ore: " + ora);
+                document.getElementById("aula-" + aula).setAttribute("data-marked", "true");
+              }
+            }else{
+              $("#aula-" + aula).hide();
+            }
+          }
+        }
+        
+        for(i = 0; i < aule.length; i++){  
+          var aula = aule[i].split("/")[1];
+          
+          if (aula.indexOf('.') > -1){
+            aula = aula.replace('.','');
+          } else if (aula.indexOf(' ') > -1){
+            aula = aula.replace(' ','-');
+          }    
+            
+          if(document.getElementById("aula-" + aula).getAttribute("data-marked") == "false"){
+            $("#ora-" + aula).html(" libera fino a fine giornata");
+          }
+        }
+      }
+      else{
+        alert("Inserisci l'ora!");
+      }
+    }
+    
+    $(function() {
+      $('#setTimeButton').on('click', function() {
+        var date = new Date();
+        var hours = date.getHours();
+        var mins = date.getMinutes();
+        
+        if(mins < 10){
+          mins = '0' + mins;
+        }
+        if(mins < 10){
+          mins = '0' + mins;
+        }
+        
+        var currentTime = hours + ':' + mins;
+        $("#setTime").val(currentTime);
+      });
+      
+      /*
+      $('#setTimeExample').timepicker();
+            
+      $('#setTimeButton').on('click', function() {
+        $('#setTimeExample').timepicker('setTime', new Date());
+      });
+      */
+    });
+  </script>
+ 
+  <title>Aule</title>
 </head>
 <body onload="retrieveJson()">
-	<nav class="navbar navbar-default"> 
+  <nav class="navbar navbar-default"> 
         <div class="container-fluid">
-			<div class="navbar-header col-xs-12">
-				<ul class="nav navbar-nav col-xs-5 col-sm-5">
-                     <li><a href="/"><span class="glyphicon glyphicon-arrow-left"></span> Home</a></li>
-                </ul>
-				<ul style="padding-left:4.5%" class="nav navbar-nav" >
-                    <li><a href="/">DISIer</a></li>
-                </ul>
-			</div>	
+			<div class="navbar-header col-xs-12">     
+				<ul class="nav navbar-nav col-xs-5 col-sm-5"> 
+					<li><a href="/"><span class="glyphicon glyphicon-arrow-left"></span> Home</a></li>
+				</ul>
+				<ul style="padding-left:4.5%" class="nav navbar-nav" > 
+					<li><a href="/">DISIer</a></li> 
+				</ul>        
+			</div>
         </div>
     </nav> 
-
-
-<div class="dropdown-div">
-<div class="title">Scegli l'orario in cui vuoi visualizzare quali aule sono libere</div>
-	<ul>		
+ 
+	<div class="dropdown-div">
+	<div class="title">Scegli l'orario in cui vuoi visualizzare quali aule sono libere</div>
+	  <ul>    
 		<li>
-			<label>Dalle ore:</label>
-			<input id="setTimeExample" type="text" class="time" />
-			<button class="button" id="setTimeButton">Imposta ora corrente</button>
-		</li>		
-		<li>
-		<br>
-			<button class="button" onclick="mostraAule()">Mostra</button>
+		  <label>Dalle ore:</label>
+		  <input type="time" id="setTime"/>
 		</li>
-	</ul>
-</div>
-</br>
-<div class="cd-schedule loading">
-	<div class="events">
-		<ul>
-			<li class="events-group" id="1">
-				<div class="top-info"><span id="1-day">lunedì</span></div>
-			</li>
+		<li>
+		  <button class="button" id="setTimeButton">Imposta ora corrente</button>
+		</li>
+		<li>
+		  <button class="button" onclick="mostraAule()">Mostra</button>
+		</li>
+	  </ul>
+	</div>
+	</br>
+	<div class="cd-schedule loading">
+	  <div class="events">
+		<ul id="events-list">
 		</ul>
-	</div>
-
-	<div class="event-modal">
+	  </div>
+	 
+	  <div class="event-modal">
 		<header class="header">
-			<div class="content">
-				<span class="event-date"></span>
-				<h3 class="event-name"></h3>
-			</div>
-
-			<div class="header-bg"></div>
+		  <div class="content">
+			<span class="event-date"></span>
+			<h3 class="event-name"></h3>
+		  </div>
+	 
+		  <div class="header-bg"></div>
 		</header>
-
+	 
 		<div class="body">
-			<div class="event-info"></div>
-			<div class="body-bg"></div>
+		  <div class="event-info"></div>
+		  <div class="body-bg"></div>
 		</div>
-
+	 
 		<a href="#0" class="close">Close</a>
-	</div>
-
-	<div class="cover-layer"></div>
-</div> <!-- .cd-schedule -->
-<script src="js/modernizr.js"></script>
-<script>
-	if( !window.jQuery ) document.write('<script src="js/jquery-3.0.0.min.js"><\/script>');
-</script>
+	  </div>
+	 
+	  <div class="cover-layer"></div>
+	</div> <!-- .cd-schedule -->
+	<script src="js/modernizr.js"></script>
+	<script>
+	  if( !window.jQuery ) document.write('<script src="js/jquery-3.0.0.min.js"><\/script>');
+	</script>
 </body>
 </html>
+ 
