@@ -14,6 +14,7 @@
         <!-- Scrollbar Custom CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
 		
 		<style>
 			.footer {
@@ -51,7 +52,6 @@
 			{
 				height: 5vh;
 			}
-
             .popover{
                 max-width: 90%; /* Max Width of the popover (depending on the container!) */
             }
@@ -62,22 +62,22 @@
         <div class="wrapper">
             
 			<!-- Sidebar Holder -->
-            <nav id="sidebar">
+            <nav id="sidebar" style="background-color:#474747">
                 <div id="dismiss">
                     <i class="glyphicon glyphicon-arrow-left"></i>
                 </div>
 
-                <div class="sidebar-header">
+                <div class="sidebar-header" style="background-color:#474747">
                     <h3>DISIer</h3>
                 </div>
 
                 <ul class="list-unstyled components">
-                    <li class="active">
-                        <a href="#" >Home</a>
+                    <li class="active" >
+                        <a href="#"  style="background-color: #a0a0a0">Home</a>
                     </li>
                     
                     <li>
-                        <a href="/orari_corsi">Orari e aule</a>
+                        <a href="/orari_corsi">Orari Lezioni</a>
                     </li>
                     <li>
                         <a href="/orari_Autobus_s">Orari Trasporti</a>
@@ -86,7 +86,7 @@
                         <a href="/calendar_s">Calendario</a>
                     </li>
 					<li>
-                        <a href="/bot">Bot</a>
+                        <a href="/aule_libere">Aule Libere</a>
                     </li>
                 </ul>
 
@@ -121,14 +121,27 @@
 						<div class="col-xs-6 alignContainer" style="background-color: #1D83A3; height: 45vh;"> <!-- 0091EA -->
 							<a href="/orari_corsi" class="alignContent" >
 								<img class="imgResize" src="images/orari_e_aule-white.png" />
-								<p style="color: white; ">Orari e aule</p>
+								<p style="color: white; ">Orari Lezioni</p>
 							</a>
 						</div>
 						<div class="col-xs-6 alignContainer" style="background-color: #D62C26; height: 45vh; "> <!-- 388E3C -->
-                                <a href="/orari_Autobus_s" class="alignContent" >
-                                    <img class="imgResize" src="images/bus-stop-white.png" />
-                                    <p style="color: white; ">Orari  Trasporti</p> 
-                                </a>
+                                
+								
+								<form action="/orari_Autobus_s" method="GET" class="alignContent">
+									<img class="imgResize" src="images/bus-stop-white.png" />
+									<div class="row">
+										<p style="color: white; ">Orari Trasporti</p>
+									</div>
+									<div class="form-group">
+										<div class="row col-xs-12 col-sm-6">
+											<input class="form-control text-center col-sm-offset-7 col-xs-offset-1" type="text" name="dest" value="Trento-Autostaz."></input>
+										</div>
+									</div>
+									<br/>
+									<div class="row col-xs-12 col-sm-12">
+										<input  type="submit" class="btn btn-primary col-xs-offset-2 col-sm-offset-1"  ></input>
+									</div>
+								</form>
 						</div>
 					</div>
 					<div class="row">
@@ -139,9 +152,9 @@
 							</a>
 						</div>
 						<div class="col-xs-6 alignContainer" style="background-color: #0F7A1E; height: 45vh">  <!-- FFB300 -->
-							<a href="/bot" class="alignContent" >
-								<img class="imgResize" src="images/bot1.png" />
-								<p style="color: white; ">Bot</p> 
+							<a href="/aule_libere" class="alignContent" >
+								<img class="imgResize" src="images/aule.png" />
+								<p style="color: white; ">Aule Libere</p> 
 							</a>
 						</div>
 					</div>				

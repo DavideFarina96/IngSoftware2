@@ -41,6 +41,17 @@ function CreateBotResponse(msg)
 	return botResponse;
 }
 
+function GetDate(d){
+	var month = d.getMonth()+1;
+	var day = d.getDate();
+
+	var date = (day < 10 ? '0' : '') + day + '-' +
+		(month < 10 ? '0' : '') + month + '-' +
+		d.getFullYear();
+		
+	return date;
+}
+
 // IMPORTANTE: restituire i file richiesti dal client(come lo stile, le immagini)
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -106,13 +117,7 @@ app.all('/aule_libere', function(request, response){
 });
 
 app.all('/orari', function(req, response, next){ 
-	var d = new Date();
-	var month = d.getMonth()+1;
-	var day = d.getDate();
-
-	var date = (day < 10 ? '0' : '') + day + '-' +
-		(month < 10 ? '0' : '') + month + '-' +
-		d.getFullYear();
+	var date = GetDate(new Date());
 	
 	var url = 'https://easyroom.unitn.it/Orario/grid_call.php?form-type=corso&anno=2017&corso=' + req.query.corso + '&anno2=' + req.query.anno2 + '&date=' + date + '&_lang=it&all_events=0'; 
 	//var url = 'https://easyroom.unitn.it/Orario/grid_call.php?form-type=corso&anno=2017&corso=0514G&anno2=P0405%7C3&date=20-11-2017&_lang=en&all_events=0'; 
@@ -129,13 +134,7 @@ app.all('/orari', function(req, response, next){
 });
 
 app.all('/aule', function(req, response, next){
-	var d = new Date();
-	var month = d.getMonth()+1;
-	var day = d.getDate();
-
-	var date = (day < 10 ? '0' : '') + day + '-' +
-		(month < 10 ? '0' : '') + month + '-' +
-		d.getFullYear();
+	var date = GetDate(new Date());
 		
 	var url = 'https://easyroom.unitn.it/Orario/rooms_call.php?form-type=rooms&sede=E0503&date=' + date + '&_lang=it'; 
 	
@@ -199,7 +198,7 @@ app.all('/bot_message', function(req, res) {
 
 function handleDirections(data){
 		//console.log(data);
-		var times = {time: "00.00", stop: "fermata", line: "0", destination:"_"};
+		var times = { time: '00.00', stop: 'not_defined', line: '0', destination:'not_defined', status:'ZERO_RESULTS' };
 		for(var i = 0; i < data.routes.length; i++)
 		{
 				for(var j = 0; j<data.routes[i].legs[0].steps.length; j++){
@@ -209,11 +208,12 @@ function handleDirections(data){
 						times.stop = data.routes[0].legs[0].steps[j].transit_details.departure_stop.name;
 						times.line = data.routes[0].legs[0].steps[j].transit_details.line.short_name;
 						times.destination = data.routes[0].legs[0].steps[j].transit_details.arrival_stop.name;
+						times.status = "OK";
 						return(times);
 					}
 			}
 		}
-		return "-1";
+		return times;
 	
 	}
 
@@ -234,7 +234,7 @@ function ContinueRequest(numeroBus, citta, res) {
 		citta = 'Povo Fac. Scienze';
 
 	var myUrl = "https://maps.googleapis.com/maps/api/directions/json?origin=Povo&destination=" + citta + "&alternative=true&transit_mode=train|tram|bus&mode=transit&key=AIzaSyBm3HQcIrjGyQAjRemBa9HZjrbp2l0uMCc";
-	var times = "qualcosa";
+	var times = { time: "00.00", stop: "not_defined", line: "0", destination:"not_defined", status:"ZERO_RESULTS" };
 
 	request({	url: myUrl,  
 				method: "GET",  
@@ -247,7 +247,7 @@ function ContinueRequest(numeroBus, citta, res) {
 							times = handleDirections(body);
 							var msg = "";	
 							// -1 = no bus.		
-							if(times != "-1")
+							if(times.status != "ZERO_RESULTS")
 							{	
 								if(numeroBus == times.line)
 									msg = "Il prossimo " + times.line + " per " + citta + " è alle " + times.time + ".";
@@ -309,3 +309,5 @@ app.listen(port);
 //console.log('Server running at http://localhost:' + port);
 
 module.exports.CreateBotResponse = CreateBotResponse;
+module.exports.handleDirections = handleDirections;
+module.exports.GetDate = GetDate;
