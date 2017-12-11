@@ -50,7 +50,7 @@
 			for(i = 0; i < celle.length; i++){
 				giorno = celle[i].giorno;
 				$('#' + giorno + "-list").append(
-					'<li class="single-event" data-start="' + celle[i].ora_inizio + '" data-end="' + celle[i].ora_fine + ' "data-event="event-1">' + 
+					'<li class="single-event" data-progr="' + celle[i].ora_inizio.split(":")[0] + '" data-start="' + celle[i].ora_inizio + '" data-end="' + celle[i].ora_fine + ' "data-event="event-1">' + 
 						'<a href="#0">' +
 							'<em class="event-name">' + celle[i].titolo_lezione + '</em>' +
 							'<em class="event-other">' + celle[i].docente + '</em>' +
@@ -58,6 +58,15 @@
 						'</a>' +
 					'</li>'
 				);
+			}
+			
+			for(i = 1; i < 6; i++){
+				var $wrapper = $('#' + i + '-list');
+
+				$wrapper.find('.single-event').sort(function(a, b) {
+					return +a.dataset.progr - +b.dataset.progr;
+				})
+				.appendTo($wrapper);
 			}
 			
 			viewSchedule();
