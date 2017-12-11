@@ -55,6 +55,34 @@ function GetDate(d){
 // IMPORTANTE: restituire i file richiesti dal client(come lo stile, le immagini)
 app.use(express.static(path.join(__dirname, 'public')));
 
+/*PROVE::::: app.all('/stops-map', function(req, res){
+    // tolto temporaneamente response.sendfile('stops-map.html');
+	// ******* codice tmp
+	res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/html');
+    
+    //Enabling CORS
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    if (req.method === 'Options') {
+        res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+        return res.status(200).json({});
+    }
+    
+	
+    //write response
+    res.write('<h3>Pagine mappe:</h3>');
+	res.write('<a href=\'/stops-map\'>/stops-map</a> --> collega alla pagina che visualizza le fermate di autobus e treni nelle vicinanze dell\'utente. \n');
+	res.write('<a href=\'/posizione_dinamica\'>/posizione_dinamica</a> --> pagina con fermate vicino a posizione attuale. \n');
+	res.write('<a href=\'/orari_Autobus\'>/orari_Autobus</a> --> lista orari prossimo autobus per trento. \n');
+
+    //send response
+    res.end();
+}); prove. codice per gestire il "******* codice tmp" 
+app.all('/posizione_dinamica', function(request, response){
+    response.sendfile('posizione_dinamica.html');
+});*/
+
 
 // quando l'utente entra nella pagina con la mappa autobus, viene reindirizzato alla stessa pagina ma in versione https (perchè in http la localizzazione non va)
 app.all('/orari_Autobus_s', function(request, response){
@@ -194,7 +222,7 @@ function ContinueRequest(numeroBus, citta, res) {
 	if(citta == null || citta == "")
 	{	
 		res.send(CreateBotResponse("Per favore dammi sia il numero del bus che il luogo in cui andare"));
-		return CreateBotResponse("Per favore dammi sia il numero del bus che il luogo in cui andare");
+		return;
 	}
 	//riformatto le città per comodità dell'utente
 	citta = citta.toLowerCase();
@@ -231,12 +259,10 @@ function ContinueRequest(numeroBus, citta, res) {
 							else
 								msg = "Non c'è un autobus per " + citta + ".";						
 							res.send(CreateBotResponse(msg));
-							return CreateBotResponse(msg);
 						}
 						else
 						{ 
 							res.send(CreateBotResponse("Errore: " + response.statusCode));
-							return CreateBotResponse("Errore: " + response.statusCode);
 						}
 		});
 }
@@ -285,4 +311,3 @@ app.listen(port);
 module.exports.CreateBotResponse = CreateBotResponse;
 module.exports.handleDirections = handleDirections;
 module.exports.GetDate = GetDate;
-module.exports.ContinueRequest = ContinueRequest;

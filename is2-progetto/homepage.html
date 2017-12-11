@@ -125,23 +125,29 @@
 							</a>
 						</div>
 						<div class="col-xs-6 alignContainer" style="background-color: #D62C26; height: 45vh; "> <!-- 388E3C -->
-                                
-								
-								<form action="/orari_Autobus_s" method="GET" class="alignContent">
-									<img class="imgResize" src="images/bus-stop-white.png" />
-									<div class="row">
-										<p style="color: white; ">Orari Trasporti</p>
-									</div>
-									<div class="form-group">
-										<div class="row col-xs-12 col-sm-6">
-											<input class="form-control text-center col-sm-offset-7 col-xs-offset-1" type="text" name="dest" value="Trento-Autostaz."></input>
+                                <div class="alignContent">
+									<a href="/orari_Autobus_s" >
+										<div class="row" style="margin-bottom:0px;">
+												<img class="imgResize" src="images/bus-stop-white.png" />
+												
+													<p style="color: white; ">Orari Trasporti per:</p>
+
 										</div>
-									</div>
-									<br/>
-									<div class="row col-xs-12 col-sm-12">
-										<input  type="submit" class="btn btn-primary col-xs-offset-2 col-sm-offset-1"  ></input>
-									</div>
-								</form>
+										<div class="row">
+												<form action="/orari_Autobus_s" method="GET" >
+													<div class="form-group" >
+															<div class="row col-xs-12 col-sm-6" >
+																<input href="#" onClick="return false;"  ondragstart="return false;" ondrop="return false;" class="form-control text-center col-sm-offset-7 col-xs-offset-1" type="text" name="dest" value="Trento-Autostaz."></input>
+															</div>
+													</div>
+													<br/>
+													<div class="row col-xs-12 col-sm-12">
+														<input  type="submit" class="btn btn-primary col-xs-offset-2 col-sm-offset-1"  ></input>
+													</div>
+												</form>
+										</div>
+									</a>
+								</div>
 						</div>
 					</div>
 					<div class="row">
