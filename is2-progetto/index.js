@@ -278,7 +278,9 @@ app.all('/info', function (req, res) {
 /* Se la richiesta dell'utente non è nessuna delle precedenti, allora ... */
 app.all('*',function(req, res, next){
   res.status(404);
-  res.write('<h1>Resource not found.</h1>');
+  res.setHeader('Content-Type', 'text/html');
+  
+  res.write('<h1>Risorsa non trovata.</h1>');
   res.write('<h4><a href="/">Clicca qui</a> per tornare alla HOME</h4>');
 
   //send response
