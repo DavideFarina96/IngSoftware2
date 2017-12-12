@@ -51,22 +51,24 @@
     
     function parseJson() {
 		aule = json_data.order;
-		  console.log(aule);
-		  
-		  eventi = json_data.events;
-		  console.log(eventi);
-		  
-		  $("#events-list").append(
-			'<li class="events-group">' +
-			'<div class="top-info">Selezionare un orario...</span></div>' +
-			'</li>'
-		  );
+		console.log(aule);
+
+		eventi = json_data.events;
+		console.log(eventi);
+
+		$("#events-list").html(
+		'<li class="events-group">' +
+		'<div class="top-info">Selezionare un orario</span></div>' +
+		'</li>'
+		);
+
+		$("#buttonMostra").prop("disabled", false);
     }
     
-    function mostraAule(){  
-		initListaAule();
-    
+    function mostraAule(){
 		if($("#setTime").val() != ""){
+			initListaAule();
+		
 			var time_string = $("#setTime").val();
 			var time_final = time_string + ":00";
         
@@ -115,14 +117,14 @@
 			var date = new Date();
 			var hours = date.getHours();
 			var mins = date.getMinutes();
-        
-			if(mins < 10){
-				mins = '0' + mins;
+			
+			if(hours < 10){
+				hours = '0' + hours;
 			}
 			if(mins < 10){
 				mins = '0' + mins;
 			}
-        
+			
 			var currentTime = hours + ':' + mins;
 			$("#setTime").val(currentTime);
 		});
@@ -156,7 +158,7 @@
 		  <button class="button" id="setTimeButton">Imposta ora corrente</button>
 		</li>
 		<li>
-		  <button class="button" onclick="mostraAule()">Mostra</button>
+		  <button id="buttonMostra" class="button" onclick="mostraAule()" disabled>Mostra</button>
 		</li>
 	  </ul>
 	</div>
@@ -164,6 +166,9 @@
 	<div class="cd-schedule loading">
 	  <div class="events">
 		<ul id="events-list">
+			<li class="events-group">
+				<div class="top-info">Attendere...</span></div>
+			</li>
 		</ul>
 	  </div>
 	 
