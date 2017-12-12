@@ -275,6 +275,16 @@ app.all('/info', function (req, res) {
     res.end();
 });
 
+/* Se la richiesta dell'utente non è nessuna delle precedenti, allora ... */
+app.all('*',function(req, res, next){
+  res.status(404);
+  res.write('<h1>Resource not found.</h1>');
+  res.write('<h4><a href="/">Clicca qui</a> per tornare alla HOME</h4>');
+
+  //send response
+  res.end();
+});
+
 
 //listen in a specific port
 app.listen(port);
